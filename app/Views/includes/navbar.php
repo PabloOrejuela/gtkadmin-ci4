@@ -11,8 +11,9 @@
                 <i class="bi bi-list"></i>
               </a>
             </li>
-            <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Inicio</a></li>
-            <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contactos</a></li>
+            <li class="nav-item d-none d-md-block"><a href="<?= site_url() ?>inicio" class="nav-link">Inicio</a></li>
+            <li class="nav-item d-none d-md-block"><a href="<?= site_url() ?>contacto" class="nav-link">Contactos</a></li>
+            <li class="nav-item d-none d-md-block"><a href="<?= site_url() ?>ayuda" class="nav-link">Ayuda</a></li>
           </ul>
           <!--end::Start Navbar Links-->
           <!--begin::End Navbar Links-->
@@ -25,93 +26,7 @@
             </li>
             <!--end::Navbar Search-->
             <!--begin::Messages Dropdown Menu-->
-            <li class="nav-item dropdown">
-              <a class="nav-link" data-bs-toggle="dropdown" href="#">
-                <i class="bi bi-chat-text"></i>
-                <span class="navbar-badge badge text-bg-danger">3</span>
-              </a>
-              <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                <a href="#" class="dropdown-item">
-                  <!--begin::Message-->
-                  <div class="d-flex">
-                    <div class="flex-shrink-0">
-                      <img
-                        src="<?= site_url(); ?>public/adminlte4/assets/img/user1-128x128.jpg"
-                        alt="User Avatar"
-                        class="img-size-50 rounded-circle me-3"
-                      />
-                    </div>
-                    <div class="flex-grow-1">
-                      <h3 class="dropdown-item-title">
-                        Brad Diesel
-                        <span class="float-end fs-7 text-danger"
-                          ><i class="bi bi-star-fill"></i
-                        ></span>
-                      </h3>
-                      <p class="fs-7">Call me whenever you can...</p>
-                      <p class="fs-7 text-secondary">
-                        <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                      </p>
-                    </div>
-                  </div>
-                  <!--end::Message-->
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                  <!--begin::Message-->
-                  <div class="d-flex">
-                    <div class="flex-shrink-0">
-                      <img
-                        src="<?= site_url(); ?>public/adminlte4/assets/img/user8-128x128.jpg"
-                        alt="User Avatar"
-                        class="img-size-50 rounded-circle me-3"
-                      />
-                    </div>
-                    <div class="flex-grow-1">
-                      <h3 class="dropdown-item-title">
-                        John Pierce
-                        <span class="float-end fs-7 text-secondary">
-                          <i class="bi bi-star-fill"></i>
-                        </span>
-                      </h3>
-                      <p class="fs-7">I got your message bro</p>
-                      <p class="fs-7 text-secondary">
-                        <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                      </p>
-                    </div>
-                  </div>
-                  <!--end::Message-->
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                  <!--begin::Message-->
-                  <div class="d-flex">
-                    <div class="flex-shrink-0">
-                      <img
-                        src="<?= site_url(); ?>public/adminlte4/assets/img/user3-128x128.jpg"
-                        alt="User Avatar"
-                        class="img-size-50 rounded-circle me-3"
-                      />
-                    </div>
-                    <div class="flex-grow-1">
-                      <h3 class="dropdown-item-title">
-                        Nora Silvester
-                        <span class="float-end fs-7 text-warning">
-                          <i class="bi bi-star-fill"></i>
-                        </span>
-                      </h3>
-                      <p class="fs-7">The subject goes here</p>
-                      <p class="fs-7 text-secondary">
-                        <i class="bi bi-clock-fill me-1"></i> 4 Hours Ago
-                      </p>
-                    </div>
-                  </div>
-                  <!--end::Message-->
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-              </div>
-            </li>
+            <!-- Aquí iba el dropdopwn de mensajes, lo quité -->
             <!--end::Messages Dropdown Menu-->
             <!--begin::Notifications Dropdown Menu-->
             <li class="nav-item dropdown">
@@ -120,7 +35,7 @@
                 <span class="navbar-badge badge text-bg-warning">15</span>
               </a>
               <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                <span class="dropdown-item dropdown-header">15 Notifications</span>
+                <span class="dropdown-item dropdown-header">15 Notificaciones</span>
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item">
                   <i class="bi bi-envelope me-2"></i> 4 new messages
@@ -137,7 +52,7 @@
                   <span class="float-end text-secondary fs-7">2 days</span>
                 </a>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer"> See All Notifications </a>
+                <a href="#" class="dropdown-item dropdown-footer"> Ver todas las notificaciones </a>
               </div>
             </li>
             <!--end::Notifications Dropdown Menu-->
@@ -157,7 +72,7 @@
                   class="user-image rounded-circle shadow"
                   alt="User Image"
                 />
-                <span class="d-none d-md-inline">Alexander Pierce</span>
+                <span class="d-none d-md-inline"><?= $session->nombre; ?></span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                 <!--begin::User Image-->
@@ -168,8 +83,8 @@
                     alt="User Image"
                   />
                   <p>
-                    Alexander Pierce - Web Developer
-                    <small>Member since Nov. 2023</small>
+                    <?= $session->nombre; ?>
+                    <small>Miembro desde <?= date('Y-m-d', strtotime($session->miembro_desde)); ?></small>
                   </p>
                 </li>
                 <!--end::User Image-->
@@ -177,17 +92,25 @@
                 <li class="user-body">
                   <!--begin::Row-->
                   <div class="row">
-                    <div class="col-4 text-center"><a href="#">Followers</a></div>
-                    <div class="col-4 text-center"><a href="#">Sales</a></div>
-                    <div class="col-4 text-center"><a href="#">Friends</a></div>
+                    <div class="col-3 text-center"><a href="<?= site_url(); ?>lista-miembros">Mi equipo</a></div>
+                    <div class="col-3 text-center"><a href="<?= site_url(); ?>lista-pedidos">Mis pedidos</a></div>
+                    <div class="col-6 text-center">
+                        <a href="#"><?= $session->rango; ?>
+                        <img
+                          src="<?= site_url(); ?>public/images/niveles/<?= $session->imagen_rango ?>"
+                          class="user-image rounded-circle shadow"
+                          alt="User Image"
+                        />
+                        </a>
+                    </div>
                   </div>
                   <!--end::Row-->
                 </li>
                 <!--end::Menu Body-->
                 <!--begin::Menu Footer-->
                 <li class="user-footer">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
-                  <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
+                  <a href="<?= site_url().'perfil/'.$session->id; ?>" class="btn btn-default btn-flat">Ver perfil</a>
+                  <a href="<?= site_url(); ?>" class="btn btn-default btn-flat float-end">Salir</a>
                 </li>
                 <!--end::Menu Footer-->
               </ul>
@@ -204,10 +127,10 @@
         <!--begin::Sidebar Brand-->
         <div class="sidebar-brand">
           <!--begin::Brand Link-->
-          <a href="../index.html" class="brand-link">
+          <a href="<?= site_url(); ?>" class="brand-link">
             <!--begin::Brand Image-->
             <img
-              src="<?= site_url(); ?>public/adminlte4/assets/img/AdminLTELogo.png"
+              src="<?= site_url(); ?>public/images/logo-ruso.png"
               alt="AdminLTE Logo"
               class="brand-image opacity-75 shadow"
             />

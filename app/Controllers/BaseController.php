@@ -9,6 +9,14 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
+use App\Models\CiudadModel;
+use App\Models\MiembroModel;
+use App\Models\PaqueteModel;
+use App\Models\ProvinciaModel;
+use App\Models\RolModel;
+use App\Models\SistemaModel;
+use App\Models\UsuarioModel;
+
 /**
  * Class BaseController
  *
@@ -35,7 +43,7 @@ abstract class BaseController extends Controller
      *
      * @var list<string>
      */
-    protected $helpers = [];
+    protected $helpers = ['form', 'url', 'html'];
 
     /**
      * Be sure to declare properties for any property fetch you initialized.
@@ -52,7 +60,19 @@ abstract class BaseController extends Controller
         parent::initController($request, $response, $logger);
 
         // Preload any models, libraries, etc, here.
+        $this->db = \Config\Database::connect();
+        $this->ciudadModel = new CiudadModel($this->db);
+        $this->miembroModel = new MiembroModel($this->db);
+        $this->paqueteModel = new PaqueteModel($this->db);
+        $this->provinciaModel = new ProvinciaModel($this->db);
+        $this->rolModel = new RolModel($this->db);
+        $this->sistemaModel = new SistemaModel($this->db);
+        $this->usuarioModel = new UsuarioModel($this->db);
 
         // E.g.: $this->session = service('session');
+        $this->session = \Config\Services::session();
+        $this->request = \Config\Services::request();
+        $this->validation = \Config\Services::validation();
+        $this->image = \Config\Services::image();
     }
 }

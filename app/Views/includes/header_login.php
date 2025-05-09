@@ -10,7 +10,7 @@
     <meta name="author" content="ColorlibHQ" />
     <meta
       name="description"
-      content="AdminLTE is a Free Bootstrap 5 Admin Dashboard, 30 example pages using Vanilla JS."
+      content="Sitio web backoffice de GTK Ecuador"
     />
     <meta
       name="keywords"
@@ -18,15 +18,15 @@
     />
     <!--end::Primary Meta Tags-->
     <!--begin::Fonts-->
-    <link rel="icon" href="favicon.ico">
-    <link
+  <title>GTK Ecuador</title>
+
+  <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
       integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
       crossorigin="anonymous"
     />
     <!--end::Fonts-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <link
       rel="stylesheet"
@@ -46,13 +46,10 @@
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="<?= site_url(); ?>public/adminlte4/css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
 
-     <!-- JQUERY -->
-    <script language="JavaScript" type="text/javascript" src="<?= site_url();?>public/js/jquery-3.7.1.js"></script>
-    
-    <!-- DATATABLES -->
-    <link rel="stylesheet" href="<?= site_url(); ?>public/datatables/datatables.min.css" />
-    <script language="JavaScript" type="text/javascript" src="<?= site_url();?>public/datatables/datatables.min.js" ></script>
-
-  </head>
-  <!--end::Head-->
+</div>
+</body>
+</html>

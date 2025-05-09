@@ -41,4 +41,43 @@ class Validation extends BaseConfig
     // --------------------------------------------------------------------
     // Rules
     // --------------------------------------------------------------------
+    public $login = [
+        'user'  => 'required',
+        'password'   => 'required',
+    ];
+
+    public $login_errors = [
+        'user' => [
+            'required' => 'El campo "Usuario" es obligatorio',
+        ],
+        'password' => [
+            'required' => 'El campo "Contraseña" es obligatorio',
+        ]
+    ];
+
+    public $insertNewMember = [
+        'nombre'  => 'required',
+        'cedula'  => 'required',
+        'user'  => 'required',
+        'password'   => 'required',
+        'idciudad'  => 'greater_than[0]',
+    ];
+
+    public $insertNewMember_errors = [
+        'nombre' => [
+            'required' => 'El campo "Nombre" es obligatorio',
+        ],
+        'user' => [
+            'required' => 'El campo "Usuario" es obligatorio',
+        ],
+        'cedula' => [
+            'required' => 'El campo "Documento" es obligatorio',
+        ],
+        'password' => [
+            'required' => 'El campo "Contraseña" es obligatorio',
+        ],
+        'idciudad' => [
+            'greater_than' => 'El campo "Ciudad" es obligatorio',
+        ]
+    ];
 }
