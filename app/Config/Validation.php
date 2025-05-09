@@ -80,4 +80,30 @@ class Validation extends BaseConfig
             'greater_than' => 'El campo "Ciudad" es obligatorio',
         ]
     ];
+
+    public $insertPedido = [
+        'nombre'  => 'required',
+        'codigo_socio'  => 'required',
+        'idpaquete'  => 'greater_than[0]',
+        'cantidad'   => 'required',
+        'total'  => 'required',
+    ];
+
+    public $insertPedido_errors = [
+        'nombre' => [
+            'required' => 'El campo "Nombre" es obligatorio',
+        ],
+        'codigo_socio' => [
+            'required' => 'El campo "Código Socio" es obligatorio',
+        ],
+        'idpaquete' => [
+            'required' => 'El campo "Paquete" es obligatorio',
+        ],
+        'cantidad' => [
+            'required' => 'El campo "Cantidad" es obligatorio',
+        ],
+        'total' => [
+            'required' => 'El campo "Total" es obligatorio y no puede ser cero',
+        ]
+    ];
 }

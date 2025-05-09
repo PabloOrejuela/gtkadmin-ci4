@@ -41,4 +41,48 @@ class Pedidos extends BaseController
         return view('dashboard/index', $data);
         
     }
+
+    public function getPaquete(){
+        $idpaquete = $this->request->getPostGet('idpaquete');
+        $res['infoPaquete'] = $this->paqueteModel->find($idpaquete);
+
+        echo json_encode($res);
+    }
+
+    public function insertNuevoPedido(){
+
+        $data = $this->acl();
+
+        if ($data['logged'] == 1) {
+
+            $pedido = [
+                'nombre' => strtoupper($this->request->getPostGet('nombre')),
+                'codigo_socio' => strtoupper($this->request->getPostGet('codigo_socio')),
+                'cantidad' => strtoupper($this->request->getPostGet('cantidad')),
+                'total' => strtoupper($this->request->getPostGet('total')),
+                'idpaquete' => strtoupper($this->request->getPostGet('idpaquete')),
+                'idmiembro' => $this->session->id,
+                'observacion_pedido' => strtoupper($this->request->getPostGet('observacion_pedido')),
+                'estado' => 0
+            ];
+
+            $this->validation->setRuleGroup('insertPedido');
+        
+        
+            if (!$this->validation->withRequest($this->request)->run()) {
+                //Depuración
+                //dd($validation->getErrors());
+                
+                return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
+            }else{ 
+                //Inserto el nuevo pedido
+                $this->pedidoModel->insert($pedido);
+                //echo $this->db->getLastQuery();
+                return redirect()->to('inicio');
+            }
+        }else{
+
+            return redirect()->to('logout');
+        }
+    }
 }

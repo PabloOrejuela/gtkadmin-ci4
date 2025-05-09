@@ -1,11 +1,11 @@
-<link rel="stylesheet" href="<?= site_url(); ?>public/css/frm-reg-new-member.css">
+<link rel="stylesheet" href="<?= site_url(); ?>public/css/form-new-order.css">
 <!--begin::Form Validation-->
     <div class="card card-gtk card-outline mb-4">
         <!--begin::Header-->
         <div class="card-header"><div class="card-title"><?= $subtitle;  ?></div></div>
         <!--end::Header-->
         <!--begin::Form-->
-        <form class="needs-validation" action="<?= site_url().'new-member-insert';?>" method="post" novalidate>
+        <form class="needs-validation" action="<?= site_url().'new-order';?>" method="post" novalidate>
         <!--begin::Body-->
         <div class="card-body">
             <!--begin::Row-->
@@ -20,7 +20,7 @@
                         name="nombre"
                         value="<?= $datosSocio[0]->nombre ?>"
                         required
-                        disabled
+                        readonly
                     />
                     <div class="valid-feedback">Correcto!</div>
                     <div class="invalid-feedback">Por favor debe ingresar su nombre .</div>
@@ -37,7 +37,7 @@
                         value="<?= $datosSocio[0]->codigo_socio ?>"
                         placeholder="nombre"
                         required
-                        disabled
+                        readonly
                     />
                     <div class="valid-feedback">Correcto!</div>
                     <div class="invalid-feedback">Por favor debe ingresar su nombre .</div>
@@ -45,8 +45,8 @@
                 <!--end::Col-->
                 <!--begin::Col-->
                 <div class="col-md-6">
-                    <label for="validationCustom04" class="form-label">Paquete</label>
-                    <select class="form-select" id="validationCustomProvincias" name="idprovincia" required>
+                    <label for="idpaquete" class="form-label">Paquete</label>
+                    <select class="form-select" id="idpaquete" name="idpaquete" required>
                         <option selected disabled value="">--Escoja un paquete--</option>
                         <?php
                             if ($paquetes) {
@@ -63,7 +63,7 @@
                 </div>
                 <!--end::Col-->
                 <!--begin::Col-->
-                <div class="col-md-1">
+                <div class="col-md-2">
                 <label for="cantidad" class="form-label">Cantidad</label>
                     <input
                         type="text"
@@ -78,14 +78,15 @@
                 </div>
                 <!--end::Col-->
                 <!--begin::Col-->
-                <div class="col-md-1">
-                <label for="total" class="form-label">Total</label>
+                <div class="col-md-2">
+                <label for="total" class="form-label">Total a pagar</label>
                     <input
                         type="text"
                         class="form-control"
                         id="total"
                         name="total"
                         value="130"
+                        readonly
                         required
                     />
                     <div class="valid-feedback">Correcto!</div>
@@ -94,14 +95,14 @@
                 <!--end::Col-->
                 <!--begin::Col-->
                 <div class="col-md-6">
-                    <label for="validationCustom03" class="form-label">Observaciones</label>
+                    <label for="observacion_pedido" class="form-label">Observaciones</label>
                     <textarea 
                         class="form-control"
-                        name="observaciones"
+                        name="observacion_pedido"
                         placeholder="En caso de ser necesario puede escribir un mensaje u observación sobre su pedido" 
                         id="floatingTextarea2" 
                         style="height: 100px" 
-                        ></textarea>
+                        ><?= old('observacion_pedido'); ?></textarea>
                 </div>
                 <!--end::Col-->
             </div>
@@ -145,4 +146,4 @@
     </div>
     <!--end::Form Validation-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="<?= site_url(); ?>public/js/frm-new-order.js"></script>
+    <script src="<?= site_url(); ?>public/js/form-new-order.js"></script>

@@ -12,6 +12,7 @@ use Psr\Log\LoggerInterface;
 use App\Models\CiudadModel;
 use App\Models\MiembroModel;
 use App\Models\PaqueteModel;
+use App\Models\PedidoModel;
 use App\Models\ProvinciaModel;
 use App\Models\RolModel;
 use App\Models\SistemaModel;
@@ -64,6 +65,7 @@ abstract class BaseController extends Controller
         $this->ciudadModel = new CiudadModel($this->db);
         $this->miembroModel = new MiembroModel($this->db);
         $this->paqueteModel = new PaqueteModel($this->db);
+        $this->pedidoModel = new PedidoModel($this->db);
         $this->provinciaModel = new ProvinciaModel($this->db);
         $this->rolModel = new RolModel($this->db);
         $this->sistemaModel = new SistemaModel($this->db);

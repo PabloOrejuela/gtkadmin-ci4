@@ -1,6 +1,7 @@
 <h3>Cambios</h3>
 <h5>Desarrollo</h5>
 <ul>
+    <li>Creado el form, controller y model de registrar un pedido</li>
     <li>Creado el formulario de registro de nuevo Socio</li>
     <li>Creado el formulario de edición de datos del Socio logueado</li>
     <li>Creada la interfaz de la lista de Socios Mi equipo</li>

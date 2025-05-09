@@ -77,7 +77,7 @@ class Usuarios extends BaseController
                 //echo '<pre>'.var_export($usuario, true).'</pre>';exit;
                 //Inserto el nuevo usuario
                 $this->usuarioModel->insert($usuario);
-                echo $this->db->getLastQuery();
+                //echo $this->db->getLastQuery();
                 return redirect()->to('lista-miembros');
             }
         }else{

@@ -9,12 +9,6 @@
               role="menu"
               data-accordion="false"
             >
-              <li class="nav-item">
-                <a href="<?= site_url();?>" class="nav-link">
-                  <i class="nav-icon bi bi-house"></i>
-                  <p>Inicio</p>
-                </a>
-              </li>
             </ul>
             <!--end::Sidebar Menu-->
           </nav>
