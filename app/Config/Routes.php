@@ -23,3 +23,5 @@ $routes->get('lista-miembros', 'Usuarios::listaMiembros');
 $routes->get('new-order', 'Pedidos::registraNuevoPedido');
 $routes->post('new-order', 'Pedidos::insertNuevoPedido');
 $routes->get('get-paquete', 'Pedidos::getPaquete');
+$routes->get('lista-pedidos', 'Pedidos::listaPedidos');
+$routes->get('historial-pedidos', 'Pedidos::historialPedidos');

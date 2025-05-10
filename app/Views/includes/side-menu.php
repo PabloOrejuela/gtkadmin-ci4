@@ -23,7 +23,7 @@
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="../widgets/small-box.html" class="nav-link">
+                    <a href="historial-pedidos" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Historial del pedidos</p>
                     </a>
@@ -52,9 +52,15 @@
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="../widgets/small-box.html" class="nav-link">
+                    <a href="historial-pedidos" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Historial del pedidos</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="historial-pedidos" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Lista de pedidos mensual</p>
                     </a>
                   </li>
                 </ul>

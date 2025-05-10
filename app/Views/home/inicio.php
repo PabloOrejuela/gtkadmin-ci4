@@ -10,7 +10,7 @@
           <!--begin::Small Box Widget 1-->
           <div class="small-box text-bg-primary">
             <div class="inner">
-              <h3>150</h3>
+              <h3>150 pts</h3>
               <p>Total Volumen izquiera</p>
             </div>
             <svg
@@ -38,7 +38,7 @@
           <!--begin::Small Box Widget 2-->
           <div class="small-box text-bg-success">
             <div class="inner">
-              <h3>53</h3>
+              <h3>53 pts</h3>
               <p>Total Volumen derecha</p>
             </div>
             <svg
@@ -94,8 +94,8 @@
           <!--begin::Small Box Widget 4-->
           <div class="small-box text-bg-danger">
             <div class="inner">
-              <h3>Principiante</h3>
-              <p>Rango</p>
+              <h3>Rango</h3>
+              <p><?= $session->rango; ?></p>
             </div>
             <svg
               class="small-box-icon"
@@ -131,10 +131,67 @@
       <div class="row">
         <!-- Start col -->
         <div class="col-lg-7 connectedSortable">
-          <div class="card mb-4">
-            <div class="card-header"><h3 class="card-title">Historial de pedidos</h3></div>
-            <div class="card-body"><div id="revenue-chart"></div></div>
+          <!-- Mi equipo -->
+          <div class="card direct-chat direct-chat-primary mb-4">
+            <div class="card-header">
+              <h3 class="card-title">Lista de Pedidos de la semana</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th style="width: 10px">No.</th>
+                    <th>Fecha de compra</th>
+                    <th>Paquete</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php
+                    $num = 1;
+                    if ($pedidos) {
+                      
+                      foreach ($pedidos as $key => $pedido) {
+                        echo '<tr class="align-middle">
+                            <td>'.$num.'</td>
+                            <td>'.$pedido->fecha_compra.'</td>
+                            <td>'.$pedido->paquete.' | '.$pedido->litros.' litros - $'.$pedido->pvp.'</td>
+                            <td>'.$pedido->cantidad.'</td>
+                            <td>'.$pedido->total.'</td>';
+                            if ($pedido->estado == 1) {
+                              echo '<td>Pagado</td>';
+                            } else {
+                              echo '<td>Por pagar</td>';
+                            }
+                            
+                        echo '</tr>';
+                          $num++;
+                      }
+                    }else{
+                      echo '<tr class="align-middle">
+                            <td>1.</td>
+                            <td>SIN DATOS</td>
+                            <td>
+                              <div class="progress progress-xs">
+                                <div
+                                  class="progress-bar progress-bar-danger"
+                                  style="width: 55%"
+                                ></div>
+                              </div>
+                            </td>
+                            <td><span class="badge text-bg-danger">55%</span></td>
+                          </tr>';
+                    }
+                  ?>
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
           </div>
+          <!-- /.Mi equipo-->
           <!-- /.card -->
           <!-- Mi equipo -->
           <div class="card direct-chat direct-chat-primary mb-4">
@@ -149,7 +206,7 @@
                     <th style="width: 10px">No.</th>
                     <th>Nombre</th>
                     <th>Rango</th>
-                    <th style="width: 40px">Label</th>
+                    <th style="width: 40px">Progreso</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -208,16 +265,6 @@
             </div>
             <div class="card-body"><div id="world-map" style="height: 220px"></div></div>
             <div class="card-footer border-0">
-              <?php
-                if ($users) {
-                  foreach ($users as $key => $user) {
-                    echo '<div>'.$user->nombre.'</div>';
-                  }
-                } else {
-                  # code...
-                }
-                
-              ?>
               <!--end::Row-->
             </div>
           </div>

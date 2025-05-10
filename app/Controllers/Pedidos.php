@@ -5,8 +5,8 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 
-class Pedidos extends BaseController
-{
+class Pedidos extends BaseController {
+
     public function acl() {
         $data['idrol'] = $this->session->idrol;
         $data['id'] = $this->session->id;
@@ -63,6 +63,7 @@ class Pedidos extends BaseController
                 'idpaquete' => strtoupper($this->request->getPostGet('idpaquete')),
                 'idmiembro' => $this->session->id,
                 'observacion_pedido' => strtoupper($this->request->getPostGet('observacion_pedido')),
+                'fecha_compra' => date('Y-m-d h:m:s'),
                 'estado' => 0
             ];
 
@@ -78,11 +79,40 @@ class Pedidos extends BaseController
                 //Inserto el nuevo pedido
                 $this->pedidoModel->insert($pedido);
                 //echo $this->db->getLastQuery();
-                return redirect()->to('inicio');
+                return redirect()->to('lista-pedidos');
             }
         }else{
 
             return redirect()->to('logout');
         }
+    }
+
+    /**
+     * Grid historial de pedidos, muestra todos los pedidos sin filtro de fechas
+     *
+     * @param 
+     * @return void
+     * @throws conditon
+     **/
+    public function historialPedidos() {
+
+        $data = $this->acl();
+        
+        if ($data['logged'] == 1 && $this->session->miembros == 1) {
+
+            $data['session'] = $this->session;
+            $data['sistema'] = $this->sistemaModel->findAll();
+
+            $data['pedidos'] = $this->pedidoModel->where('idmiembro', $this->session->id)
+                                                    ->join('paquetes', 'paquetes.id=pedidos.idpaquete')
+                                                    ->findAll();
+
+            $data['title'] = 'Historial de pedidos';
+            $data['main_content'] = 'pedidos/historial_pedidos';
+            return view('dashboard/index', $data);
+        }else{
+            return redirect()->to('logout');
+        }
+        
     }
 }

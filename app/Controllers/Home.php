@@ -13,8 +13,8 @@ class Home extends BaseController
         return $data;
     }
 
-    public function index(): string
-    {
+    public function index(): string {
+
         $data = $this->acl();
         
         if ($data['logged'] == 1 ) {
@@ -115,13 +115,17 @@ class Home extends BaseController
 
             $data['session'] = $this->session;
             $data['sistema'] = $this->sistemaModel->findAll();
-            $data['users'] = $this->usuarioModel->findall();
+            $data['users'] = $this->usuarioModel->findAll();
 
             $data['micodigo'] = $this->miembroModel->find($this->session->id);
             
             $data['mi_equipo'] = $this->miembroModel->where('patrocinador', $data['micodigo']->id)
                                                     ->join('usuarios', 'usuarios.id=miembros.idusuario')
                                                     ->join('rangos', 'rangos.id=miembros.idrango')
+                                                    ->findAll();
+
+            $data['pedidos'] = $this->pedidoModel->where('idmiembro', $this->session->id)
+                                                    ->join('paquetes', 'paquetes.id=pedidos.idpaquete')
                                                     ->findAll();
 
             $data['title'] = 'Inicio';
