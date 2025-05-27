@@ -10,8 +10,8 @@
           <!--begin::Small Box Widget 1-->
           <div class="small-box text-bg-primary">
             <div class="inner">
-              <h3>150 pts</h3>
-              <p>Total Volumen izquiera</p>
+              <h3><?= $pts_izq; ?> pts</h3>
+              <p>Total Volumen izquierda</p>
             </div>
             <svg
               class="small-box-icon"
@@ -38,7 +38,7 @@
           <!--begin::Small Box Widget 2-->
           <div class="small-box text-bg-success">
             <div class="inner">
-              <h3>53 pts</h3>
+              <h3><?= $pts_der; ?> pts</h3>
               <p>Total Volumen derecha</p>
             </div>
             <svg
@@ -66,8 +66,8 @@
           <!--begin::Small Box Widget 3-->
           <div class="small-box text-bg-warning">
             <div class="inner">
-              <h3>44</h3>
-              <p>Bonos inicio rápido</p>
+              <h3><?= $bir_pendientes[0]->totalBir; ?> BIR</h3>
+              <p>Pendientes de cobrar <?= '$'.($bir_pendientes[0]->totalBir*50) ?></p>
             </div>
             <svg
               class="small-box-icon"

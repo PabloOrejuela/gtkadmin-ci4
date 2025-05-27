@@ -30,9 +30,9 @@ class Pedidos extends BaseController {
         $data['provincias'] = $this->provinciaModel->findAll();
         $data['ciudades'] = $this->ciudadModel->findAll();
         $data['paquetes'] = $this->paqueteModel->findAll();
-        $data['datosSocio'] = $this->miembroModel->where('idusuario', $this->session->id)
-                            ->join('usuarios', 'usuarios.id=miembros.idusuario')
-                            ->join('rangos', 'rangos.id=miembros.idrango')
+        $data['datosSocio'] = $this->socioModel->where('idusuario', $this->session->id)
+                            ->join('usuarios', 'usuarios.id=socios.idusuario')
+                            ->join('rangos', 'rangos.id=socios.idrango')
                             ->findAll();
 
         $data['title'] = 'Pedidos';
@@ -61,7 +61,7 @@ class Pedidos extends BaseController {
                 'cantidad' => strtoupper($this->request->getPostGet('cantidad')),
                 'total' => strtoupper($this->request->getPostGet('total')),
                 'idpaquete' => strtoupper($this->request->getPostGet('idpaquete')),
-                'idmiembro' => $this->session->id,
+                'idsocio' => $this->session->id,
                 'observacion_pedido' => strtoupper($this->request->getPostGet('observacion_pedido')),
                 'fecha_compra' => date('Y-m-d h:m:s'),
                 'estado' => 0
@@ -77,7 +77,15 @@ class Pedidos extends BaseController {
                 return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
             }else{ 
                 //Inserto el nuevo pedido
-                $this->pedidoModel->insert($pedido);
+                $res = $this->pedidoModel->insert($pedido);
+
+
+                if ($res) {
+                    //Se actualiza los puntos, cartera, 
+                    
+                }else{
+
+                }
                 //echo $this->db->getLastQuery();
                 return redirect()->to('lista-pedidos');
             }
@@ -103,7 +111,7 @@ class Pedidos extends BaseController {
             $data['session'] = $this->session;
             $data['sistema'] = $this->sistemaModel->findAll();
 
-            $data['pedidos'] = $this->pedidoModel->where('idmiembro', $this->session->id)
+            $data['pedidos'] = $this->pedidoModel->where('idsocio', $this->session->id)
                                                     ->join('paquetes', 'paquetes.id=pedidos.idpaquete')
                                                     ->findAll();
 

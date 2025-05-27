@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?= site_url(); ?>public/css/frm-reg-new-member.css">
+<link rel="stylesheet" href="<?= site_url(); ?>public/css/form-reg-new-member.css">
 <!--begin::Form Validation-->
     <div class="card card-gtk card-outline mb-4">
         <!--begin::Header-->
@@ -35,7 +35,7 @@
                     <input
                         type="text"
                         class="form-control"
-                        id="validationCustomUsername"
+                        id="usuario"
                         name="user"
                         value="<?= $perfil->user; ?>"
                         placeholder="usuario"
@@ -51,7 +51,7 @@
                     <input
                         type="password"
                         class="form-control"
-                        id="validationCustomUsername"
+                        id="password"
                         name="password"
                         value="<?= $perfil->password; ?>"
                         placeholder="password"
@@ -93,7 +93,7 @@
                 <!--end::Col-->
                 <!--begin::Col-->
                 <div class="col-md-6">
-                    <label for="validationCustomUsername" class="form-label">Email</label>
+                    <label for="validationCustomEmail" class="form-label">Email</label>
                     <div class="input-group has-validation">
                         <span class="input-group-text" id="inputGroupPrepend">@</span>
                         <input
@@ -227,6 +227,13 @@
         <!--begin::Footer-->
         <div class="card-footer">
             <button class="btn btn-info" type="submit">Actualizar datos</button>
+            <input
+                type="hidden"
+                name="mensaje"
+                class="form-control"
+                id="mensaje"
+                value="<?= $session->mensaje; ?>"
+            />
         </div>
         <!--end::Footer-->
         </form>
@@ -261,4 +268,4 @@
     </div>
     <!--end::Form Validation-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="<?= site_url(); ?>public/js/frm-reg-new-member.js"></script>
+    <script src="<?= site_url(); ?>public/js/form-edit-perfil.js"></script>

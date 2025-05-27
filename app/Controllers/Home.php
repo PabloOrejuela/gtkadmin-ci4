@@ -10,6 +10,7 @@ class Home extends BaseController
         $data['logged'] = $this->usuarioModel->_getLogStatus($data['id']);
         $data['nombre'] = $this->session->nombre;
         $data['miembro_desde'] = $this->session->created_at;
+        
         return $data;
     }
 
@@ -43,19 +44,16 @@ class Home extends BaseController
         }else{ 
 
             $usuario = $this->usuarioModel->_getUsuario($data);
-            //echo '<pre>'.var_export($usuario, true).'</pre>';exit;
             $ip = $_SERVER['REMOTE_ADDR'];
-            //echo '<pre>'.var_export($usuario, true).'</pre>';exit;
-
             $estado = 1;
             
             if ($estado == 0) {
                 return redirect()->to('/');
             }else{
-
+                
                 if (isset($usuario) && $usuario != NULL ) {
                     //valido el login y pongo el id en sesion  && $usuario->id != 1 
-                    //echo '<pre>'.var_export($this->estadoSistema, true).'</pre>';
+
                     if ($usuario->logged == 1 ) {
                         //Está logueado así que lo deslogueo
                         $user = [
@@ -65,7 +63,7 @@ class Home extends BaseController
                         ];
                         $this->usuarioModel->update($usuario->id, $user);
                     }
-                    
+
                     $sessiondata = [
                         
                         'id' => $usuario->id,
@@ -77,11 +75,13 @@ class Home extends BaseController
                         'rol' => $usuario->rol,
                         'administracion' => $usuario->administracion,
                         'reportes' => $usuario->reportes,
-                        'miembros' => $usuario->miembros,
+                        'socios' => $usuario->codigo_socio,
                         'estado' => $usuario->estado,
                         'rango' => $usuario->rango,
-                        'imagen_rango' => $usuario->imagen,
-                        'miembro_desde' => $usuario->created_at,
+                        'miembro_desde' => $usuario->miembro_desde,
+                        'miembros' => $usuario->miembros,
+                        'reportes' => $usuario->reportes,
+                        'administracion' => $usuario->administracion,
                     ];
                     
                     $iduser = $usuario->id;
@@ -90,7 +90,7 @@ class Home extends BaseController
                         'logged' => 1,
                         'ip' => $ip
                     ];
-                    //echo '<pre>'.var_export($sessiondata, true).'</pre>';exit;
+                    
                     $this->usuarioModel->update($iduser, $user);
                     
                     $this->session->set($sessiondata);
@@ -100,7 +100,10 @@ class Home extends BaseController
                 }else{
                     $this->session->setFlashdata('mensaje', $data);
                     //$this->logout();
-                    return redirect()->back()->with('mensaje', 'Hubo un problema, no puede ingresar al sistema, puede deberse a: Usuario / contraseña incorrectos o su usuario ha sido desactivado, contacte con el administrador');
+                    return redirect()->back()->with(
+                        'mensaje', 
+                        'Hubo un problema, no puede ingresar al sistema, puede deberse a: Usuario / contraseña incorrectos o su usuario ha sido desactivado, contacte con el administrador'
+                    );
                 }
             }
         }
@@ -108,7 +111,7 @@ class Home extends BaseController
     }
 
     public function inicio() {
-
+        
         $data = $this->acl();
         
         if ($data['logged'] == 1 && $this->session->miembros == 1) {
@@ -117,16 +120,21 @@ class Home extends BaseController
             $data['sistema'] = $this->sistemaModel->findAll();
             $data['users'] = $this->usuarioModel->findAll();
 
-            $data['micodigo'] = $this->miembroModel->find($this->session->id);
+            $data['micodigo'] = $this->socioModel->find($this->session->id);
             
-            $data['mi_equipo'] = $this->miembroModel->where('patrocinador', $data['micodigo']->id)
-                                                    ->join('usuarios', 'usuarios.id=miembros.idusuario')
-                                                    ->join('rangos', 'rangos.id=miembros.idrango')
+            $data['mi_equipo'] = $this->socioModel->where('patrocinador', $data['micodigo']->id)
+                                                    ->join('usuarios', 'usuarios.id=socios.idusuario')
+                                                    ->join('rangos', 'rangos.id=socios.idrango')
                                                     ->findAll();
 
-            $data['pedidos'] = $this->pedidoModel->where('idmiembro', $this->session->id)
+            $data['pedidos'] = $this->pedidoModel->where('idsocio', $this->session->id)
                                                     ->join('paquetes', 'paquetes.id=pedidos.idpaquete')
                                                     ->findAll();
+
+            $data['pts_izq'] = 0;
+            $data['pts_der'] = 0;
+
+            $data['bir_pendientes'] = $this->birModel->selectCount('id', 'totalBir')->where('idsocio', $this->session->id)->where('estado', 0)->findAll();                         
 
             $data['title'] = 'Inicio';
             $data['subtitle']='Index';

@@ -5,8 +5,8 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 
-class Usuarios extends BaseController
-{
+class Usuarios extends BaseController {
+
     public function acl() {
         $data['idrol'] = $this->session->idrol;
         $data['id'] = $this->session->id;
@@ -16,8 +16,7 @@ class Usuarios extends BaseController
         return $data;
     }
 
-    public function index()
-    {
+    public function index(){
         //
     }
 
@@ -76,7 +75,57 @@ class Usuarios extends BaseController
                 
                 //echo '<pre>'.var_export($usuario, true).'</pre>';exit;
                 //Inserto el nuevo usuario
-                $this->usuarioModel->insert($usuario);
+                $user = $this->usuarioModel->insert($usuario);
+
+                if ($user) {
+                    //Género un codigo de socio
+                    $lastId = $this->socioModel->orderBy('id',"desc")->limit(1)->findAll();
+
+                    $socio = [
+                        'codigo_socio' => 'GTK-170000'.(int)($lastId[0]->id + 1),
+                        'patrocinador' => $this->session->id,
+                        'fecha_inscripcion' => date('Y-m-d h:m:s'),
+                        'idusuario' => $user,
+                        'idrango' => 1,
+                        'estado' => 0
+                    ];
+                    
+                    $socio =$this->socioModel->insert($socio);
+
+                } else {
+                    //Salgo del sistema
+                }
+                
+                if ($socio) {
+                    //Se genera un BIR
+                     $bir = [
+                        'idsocio' => $this->session->id,
+                        'socio_nuevo' => $socio,
+                        'fecha' => date('Y-m-d h:m:s'),
+                        'estado' => 0,
+                    ];
+                    $idbir = $this->birModel->insert($bir);
+
+                    //Se carga ese BIR por cobrar a la billetera digital
+                    if ($idbir) {
+                        //Si se insertó el BIR cargo el bono en la billetera
+                        $bono = [
+                            'idsocio' => $this->session->id,
+                            'fecha' => date('Y-m-d'),
+                            'tipo_mov' => 3, //INGRESO POR BIR ACREDITADO
+                            'cantidad' => 50,
+                            'origen' => 0,
+                            'concepto' => "INGRESO POR BIR ACREDITADO",
+                            'idbir' => $idbir
+                        ];
+
+                        $res = $this->billeteraDigitalModel->insert($bono);
+                    }
+                    
+                }else{
+
+                }
+               
                 //echo $this->db->getLastQuery();
                 return redirect()->to('lista-miembros');
             }
@@ -93,7 +142,7 @@ class Usuarios extends BaseController
      * @return void
      * @throws conditon
      **/
-    public function perfil($id) {
+    public function perfil($id, $mensaje = '') {
 
         $data = $this->acl();
         
@@ -109,6 +158,7 @@ class Usuarios extends BaseController
 
             $data['title'] = 'Mis datos';
             $data['subtitle']='Editar datos del usuario';
+            $data['mensaje'] = $mensaje;
 
             if ($data['perfil']) {
                 $data['main_content'] = 'usuarios/form_edit_perfil';
@@ -121,6 +171,57 @@ class Usuarios extends BaseController
             return redirect()->to('logout');
         }
         
+    }
+
+    /**
+     * Recibe la información editada del perfil de un usuario
+    */
+    public function editProfile($mensaje = ''){
+
+        $data = $this->acl();
+
+        if ($data['logged'] == 1) {
+
+            $id = $this->session->id;
+
+            $usuario = [
+                'nombre' => strtoupper($this->request->getPostGet('nombre')),
+                'user' => strtoupper($this->request->getPostGet('user')),
+                'password' => strtoupper($this->request->getPostGet('password')),
+                'telefono' => strtoupper($this->request->getPostGet('telefono')),
+                'telefono_2' => strtoupper($this->request->getPostGet('telefono_2')),
+                'cedula' => strtoupper($this->request->getPostGet('cedula')),
+                'direccion' => strtoupper($this->request->getPostGet('direccion')),
+                'email' => $this->request->getPostGet('email'),
+                'idciudad' => strtoupper($this->request->getPostGet('idciudad')),
+                'acuerdo_terminos' => strtoupper($this->request->getPostGet('acuerdo_terminos')),
+            ];
+            
+            $this->validation->setRuleGroup('insertNewMember');
+        
+        
+            if (!$this->validation->withRequest($this->request)->run()) {
+                //Depuración
+                //dd($validation->getErrors());
+                
+                return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
+            }else{ 
+                
+                //Inserto el nuevo usuario
+                $res = $this->usuarioModel->update($id, $usuario);
+
+                if ($res) {
+                    $this->session->setFlashdata('mensaje', "success");
+                }else{
+                    $this->session->setFlashdata('mensaje', "error");
+                }
+                
+                return redirect()->to('perfil/'.$id);
+            }
+        }else{
+
+            return redirect()->to('logout');
+        }
     }
 
     /**
@@ -146,7 +247,35 @@ class Usuarios extends BaseController
             return view('dashboard/index', $data);
         }else{
             return redirect()->to('logout');
-        }
+        } 
+    }
+
+    /**
+     * Tanque de reserva miembros registrados aún no ubicados
+     *
+     * @param 
+     * @return void
+     * @throws conditon
+     **/
+    public function tanqueReserva() {
+
+        $data = $this->acl();
         
+        if ($data['logged'] == 1 && $this->session->miembros == 1) {
+
+            $data['session'] = $this->session;
+            $data['sistema'] = $this->sistemaModel->findAll();
+
+            $data['sociosReserva'] = $this->socioModel->join('usuarios', 'socios.idusuario=usuarios.id', 'left')
+                ->orderBy('nombre', 'asc')
+                ->findall();
+
+            $data['title'] = 'Mi Equipo';
+            $data['subtitle'] = 'Tanque de retención';
+            $data['main_content'] = 'usuarios/tanque-reserva';
+            return view('dashboard/index', $data);
+        }else{
+            return redirect()->to('logout');
+        } 
     }
 }

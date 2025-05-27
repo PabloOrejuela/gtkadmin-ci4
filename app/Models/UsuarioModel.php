@@ -4,15 +4,17 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class UsuarioModel extends Model
-{
+class UsuarioModel extends Model {
+
     protected $table            = 'usuarios';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['nombre','cedula','user','password','telefono','direccion','email','estado','idrol','logged','ip'];
+    protected $allowedFields    = [
+        'nombre','cedula','user','password','telefono','telefono_2','direccion','email','estado','idrol','logged','ip','estado','acuerdo_terminos'
+    ];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -50,12 +52,12 @@ class UsuarioModel extends Model
         $builder->select(
             'usuarios.id as id,rango,acuerdo_terminos,
             nombre,user,telefono,email,password,imagen,
-            cedula,idrol,logged,rol,administracion,reportes,miembros,
+            cedula,idrol,logged,rol,administracion,reportes,codigo_socio,miembros,
             '.$this->table.'.estado as estado,
-            '.$this->table.'.created_at as created_at'
+            '.$this->table.'.created_at as miembro_desde'
         )->where('user', $usuario['user'])->where('password', md5($usuario['password']))->where($this->table.'.estado', 1);
-        $builder->join('miembros', 'miembros.idusuario=usuarios.id');
-        $builder->join('rangos', 'rangos.id=miembros.idrango');
+        $builder->join('socios', 'socios.idusuario=usuarios.id');
+        $builder->join('rangos', 'rangos.id=socios.idrango');
         $builder->join('roles', 'roles.id=usuarios.idrol');
         $query = $builder->get();
         if ($query->getResult() != null) {
@@ -63,7 +65,7 @@ class UsuarioModel extends Model
                 $result = $row;
             }
         }
-        //echo $this->db->getLastQuery();
+        //echo $this->db->getLastQuery();exit;
         return $result;
     }
 

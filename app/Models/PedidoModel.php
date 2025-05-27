@@ -13,7 +13,7 @@ class PedidoModel extends Model {
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'fecha_compra','cantidad','total','observacion_pedido','idmiembro',
+        'fecha_compra','cantidad','total','observacion_pedido','idsocio',
         'idpaquete','estado'
     ];
 

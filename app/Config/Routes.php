@@ -17,11 +17,18 @@ $routes->get('select-ciudades', 'Home::selectCiudades');
 $routes->get('new-member', 'Usuarios::registrarNuevoMiembro');
 $routes->post('new-member-insert', 'Usuarios::insertNuevoMiembro');
 $routes->get('perfil/(:num)', 'Usuarios::perfil/$1');
-$routes->get('lista-miembros', 'Usuarios::listaMiembros');
+$routes->post('edit-profile', 'Usuarios::editProfile');
 
 //Pedidos
 $routes->get('new-order', 'Pedidos::registraNuevoPedido');
 $routes->post('new-order', 'Pedidos::insertNuevoPedido');
 $routes->get('get-paquete', 'Pedidos::getPaquete');
-$routes->get('lista-pedidos', 'Pedidos::listaPedidos');
+$routes->get('lista-pedidos', 'Pedidos::historialPedidos'); //Cambiar por lista de pedidos
 $routes->get('historial-pedidos', 'Pedidos::historialPedidos');
+
+//Mi billetera
+$routes->get('my-wallet', 'BilleteraDigital::index');
+
+//MI EQUIPO
+$routes->get('lista-miembros', 'Usuarios::listaMiembros');
+$routes->get('tanque-reserva', 'Usuarios::tanqueReserva');

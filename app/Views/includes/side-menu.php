@@ -66,7 +66,7 @@
                 </ul>
               </li>
               </li>
-                <a href="../docs/introduction.html" class="nav-link">
+                <a href="<?= site_url() ?>my-wallet" class="nav-link">
                   <i class="nav-icon bi bi-wallet-fill"></i>
                   <p>Mi billetera </p>
                 </a>
@@ -94,9 +94,9 @@
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="../layout/sidebar-mini.html" class="nav-link">
+                    <a href="<?= site_url() ?>tanque-reserva" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Tanque de derrame</p>
+                      <p>Tanque de retención</p>
                     </a>
                   </li>
                   <li class="nav-item">

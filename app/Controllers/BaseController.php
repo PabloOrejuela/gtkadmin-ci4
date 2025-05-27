@@ -9,14 +9,17 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
+use App\Models\BilleteraDigitalModel;
+use App\Models\BirModel;
 use App\Models\CiudadModel;
-use App\Models\MiembroModel;
+use App\Models\SocioModel;
 use App\Models\PaqueteModel;
 use App\Models\PedidoModel;
 use App\Models\ProvinciaModel;
 use App\Models\RolModel;
 use App\Models\SistemaModel;
 use App\Models\UsuarioModel;
+
 
 /**
  * Class BaseController
@@ -62,8 +65,10 @@ abstract class BaseController extends Controller
 
         // Preload any models, libraries, etc, here.
         $this->db = \Config\Database::connect();
+        $this->billeteraDigitalModel = new BilleteraDigitalModel($this->db);
+        $this->birModel = new BirModel($this->db);
         $this->ciudadModel = new CiudadModel($this->db);
-        $this->miembroModel = new MiembroModel($this->db);
+        $this->socioModel = new SocioModel($this->db);
         $this->paqueteModel = new PaqueteModel($this->db);
         $this->pedidoModel = new PedidoModel($this->db);
         $this->provinciaModel = new ProvinciaModel($this->db);

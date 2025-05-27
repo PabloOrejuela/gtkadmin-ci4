@@ -95,13 +95,7 @@
                     <div class="col-3 text-center"><a href="<?= site_url(); ?>lista-miembros">Mi equipo</a></div>
                     <div class="col-3 text-center"><a href="<?= site_url(); ?>lista-pedidos">Mis pedidos</a></div>
                     <div class="col-6 text-center">
-                        <a href="#"><?= $session->rango; ?>
-                        <img
-                          src="<?= site_url(); ?>public/images/niveles/<?= $session->imagen_rango ?>"
-                          class="user-image rounded-circle shadow"
-                          alt="User Image"
-                        />
-                        </a>
+                        <a href="#"><?= $session->rango; ?></a>
                     </div>
                   </div>
                   <!--end::Row-->
