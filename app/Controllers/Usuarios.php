@@ -278,4 +278,19 @@ class Usuarios extends BaseController {
             return redirect()->to('logout');
         } 
     }
+
+    /**
+     * Sevuelve los socios del equipo que estén en una pierna de la organización
+     *
+     * @param 
+     * @return void
+     * @throws conditon
+     **/
+    public function getSocios() {
+
+        $pierna = $this->request->getPostGet('pierna');
+        $equipo = $this->socioModel->where('patrocinador', $this->session->id)->join('usuarios', 'socios.idusuario=usuarios.id', 'left')->findAll();
+
+        echo json_encode($equipo);
+    }
 }
