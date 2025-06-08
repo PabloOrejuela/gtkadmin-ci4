@@ -2,8 +2,8 @@
 
 namespace App\Controllers;
 
-class Home extends BaseController
-{
+class Home extends BaseController {
+
     public function acl() {
         $data['idrol'] = $this->session->idrol;
         $data['id'] = $this->session->id;
@@ -122,15 +122,18 @@ class Home extends BaseController
 
             $data['micodigo'] = $this->socioModel->find($this->session->id);
             
-            $data['mi_equipo'] = $this->socioModel->where('patrocinador', $data['micodigo']->id)
-                                                    ->join('usuarios', 'usuarios.id=socios.idusuario')
-                                                    ->join('rangos', 'rangos.id=socios.idrango')
-                                                    ->findAll();
+            $data['mi_equipo'] = $this->socioModel->select('socios.id as id,codigo_socio,patrocinador,fecha_inscripcion,idusuario,idrango,socios.estado as estado_socio,
+                                nombre,cedula,telefono,email,idrol,rango,inscripciones.estado as estado_inscripcion,idsocio')
+                                ->where('patrocinador', $data['micodigo']->id)
+                                ->join('usuarios', 'usuarios.id=socios.idusuario')
+                                ->join('rangos', 'rangos.id=socios.idrango')
+                                ->join('inscripciones', 'inscripciones.idsocio=socios.id', 'left')
+                                ->findAll();
+
 
             $data['pedidos'] = $this->pedidoModel->where('idsocio', $this->session->id)
                                                     ->join('paquetes', 'paquetes.id=pedidos.idpaquete')
                                                     ->findAll();
-
             $data['pts_izq'] = 0;
             $data['pts_der'] = 0;
 

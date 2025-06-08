@@ -7,3 +7,10 @@
   --lte-card-variant-color-rgb: 0, 0, 0;
   width: 95%;
 }
+
+#input-inscripcion{
+  background-color: rgb(206, 209, 209);
+  font-weight: bold;
+  font-size: 1.2em;
+  width: 150px;
+}

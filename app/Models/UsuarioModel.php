@@ -82,4 +82,18 @@ class UsuarioModel extends Model {
         //echo $this->db->getLastQuery();
         return $result;
     }
+
+    function _verificaEstadoSocio($id){
+        // $result = NULL;
+        // $builder = $this->db->table('usuarios');
+        // $builder->select('logged')->where('id', $id);
+        // $query = $builder->get();
+        // if ($query->getResult() != null) {
+        //     foreach ($query->getResult() as $row) {
+        //         $result = $row->logged;
+        //     }
+        // }
+        //echo $this->db->getLastQuery();
+        return 1;
+    }
 }

@@ -10,18 +10,30 @@
     <div class="card-body">
         <!--begin::Row-->
         <div class="row g-3">
-            <table id="datatablesSimple" class="table table-bordered table-striped">
+            <table id="datatablesSimple" class="table table-bordered table-striped mt-1">
                 <thead>
-                    <th class="col-md-1">Codigo</th>
+                    <th class="col-md-1">Id</th>
                     <th>Nombre</th>
                     <th class="col-md-1">Documento</th>
                     <th class="col-md-1">Estado</th>
                 </thead>
                 <tbody>
                     <?php
-                        if ($users) {
-                            foreach ($users as $user) {
-                                echo '<tr><td>'.$user->id.'</td><td>'.$user->nombre.'</td><td>'.$user->cedula.'</td><td>'.$user->estado.'</td></tr>';
+                        if ($mi_equipo) {
+                            foreach ($mi_equipo as $socio) {
+                                echo '<tr>';
+                                echo '<td>'.$socio->id.'</td>';
+                                echo '<td>'.$socio->nombre.'</td>';
+                                echo '<td>'.$socio->cedula.'</td>';
+
+                                //verifica el estado de un socio
+                                if ($socio->estado_socio == 1 && $socio->estado_inscripcion == 1) {
+                                    echo '<td>ACTIVO</td>';
+                                } else {
+                                    echo '<td>INACTIVO</td>';
+                                }
+                                
+                                echo '</tr>';
                             }
                         } else {
                             # code...

@@ -156,6 +156,20 @@
                 </div>
                 <!--end::Col-->
                 <!--begin::Col-->
+                <div class="col-md-6">
+                    <label for="validationCustom03" class="form-label">Paquete único mas costo de inscripción:</label>
+                    <input
+                        type="text"
+                        name="cedula"
+                        class="form-control"
+                        id="input-inscripcion"
+                        value="185.00"
+                        readonly
+                    />
+                    <div class="invalid-feedback">Por favor debe ingresar un número de documento.</div>
+                </div>
+                <!--end::Col-->
+                <!--begin::Col-->
                 <div class="col-12">
                     <div class="form-check">
                     <input

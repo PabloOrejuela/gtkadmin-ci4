@@ -204,8 +204,10 @@
                 <thead>
                   <tr>
                     <th style="width: 10px">No.</th>
+                    <th id="th-codigo">Código</th>
                     <th>Nombre</th>
                     <th>Rango</th>
+                    <th>Estado</th>
                     <th style="width: 40px">Progreso</th>
                   </tr>
                 </thead>
@@ -217,9 +219,18 @@
                       foreach ($mi_equipo as $key => $socio) {
                         echo '<tr class="align-middle">
                             <td>'.$num.'</td>
+                            <td>'.$socio->codigo_socio.'</td>
                             <td>'.$socio->nombre.'</td>
-                            <td>'.$socio->rango.'</td>
-                            <td><span class="badge text-bg-danger">55%</span></td>
+                            <td>'.$socio->rango.'</td>';
+
+                          //verifica el estado de un socio
+                          if ($socio->estado_socio == 1 && $socio->estado_inscripcion == 1) {
+                            echo '<td>ACTIVO</td>';
+                          } else {
+                            echo '<td>INACTIVO</td>';
+                          }
+                            
+                        echo '<td><span class="badge text-bg-danger">55%</span></td>
                           </tr>';
                           $num++;
                       }

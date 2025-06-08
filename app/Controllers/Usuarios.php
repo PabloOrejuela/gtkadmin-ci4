@@ -7,6 +7,8 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class Usuarios extends BaseController {
 
+    protected $pago_inscripcion = "50.00";
+
     public function acl() {
         $data['idrol'] = $this->session->idrol;
         $data['id'] = $this->session->id;
@@ -121,6 +123,34 @@ class Usuarios extends BaseController {
 
                         $res = $this->billeteraDigitalModel->insert($bono);
                     }
+
+                    //Se registra el pedido inicial con la inscripcion
+                    $pedido_inicial = [
+                            
+                        'fecha_compra' => date('Y-m-d'),
+                        'cantidad' => 1,
+                        'total' => 135,
+                        'observacion_pedido' => "COMPRA INICIAL POR INSCRIPCION",
+                        'idsocio' => $socio,
+                        'idpaquete' => 1,
+                        'estado' => 0,
+                    ];
+
+                    $res = $this->pedidoModel->insert($pedido_inicial);
+
+                    //Se registra el costo de $50 de la inscripción
+                    $pedido_inicial = [
+                            
+                        'fecha_compra' => date('Y-m-d'),
+                        'cantidad' => 1,
+                        'total' => 135,
+                        'observacion_pedido' => "COMPRA INICIAL POR INSCRIPCION",
+                        'idsocio' => $socio,
+                        'idpaquete' => 1,
+                        'estado' => 0,
+                    ];
+
+                    $res = $this->pedidoModel->insert($pedido_inicial);
                     
                 }else{
 
@@ -133,6 +163,10 @@ class Usuarios extends BaseController {
 
             return redirect()->to('logout');
         }
+    }
+
+    function verificaEstadoSocio($idsocio){
+        return 1;
     }
 
     /**
@@ -239,8 +273,15 @@ class Usuarios extends BaseController {
 
             $data['session'] = $this->session;
             $data['sistema'] = $this->sistemaModel->findAll();
+            $data['micodigo'] = $this->socioModel->find($this->session->id);
 
-            $data['users'] = $this->usuarioModel->findall();
+            $data['mi_equipo'] = $this->socioModel->select('socios.id as id,codigo_socio,patrocinador,fecha_inscripcion,idusuario,idrango,socios.estado as estado_socio,
+                                nombre,cedula,telefono,email,idrol,rango,inscripciones.estado as estado_inscripcion,idsocio')
+                                ->where('patrocinador', $data['micodigo']->id)
+                                ->join('usuarios', 'usuarios.id=socios.idusuario')
+                                ->join('rangos', 'rangos.id=socios.idrango')
+                                ->join('inscripciones', 'inscripciones.idsocio=socios.id', 'left')
+                                ->findAll();
 
             $data['title'] = 'Mi Equipo';
             $data['main_content'] = 'usuarios/lista_miembros';
