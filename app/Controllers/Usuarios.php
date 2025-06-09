@@ -139,18 +139,13 @@ class Usuarios extends BaseController {
                     $res = $this->pedidoModel->insert($pedido_inicial);
 
                     //Se registra el costo de $50 de la inscripción
-                    $pedido_inicial = [
-                            
-                        'fecha_compra' => date('Y-m-d'),
-                        'cantidad' => 1,
-                        'total' => 135,
-                        'observacion_pedido' => "COMPRA INICIAL POR INSCRIPCION",
+                    $pago_inscripcion = [
+                        'pago' => 50,
                         'idsocio' => $socio,
-                        'idpaquete' => 1,
                         'estado' => 0,
                     ];
 
-                    $res = $this->pedidoModel->insert($pedido_inicial);
+                    $res = $this->inscripcionModel->insert($pago_inscripcion);
                     
                 }else{
 
@@ -276,12 +271,12 @@ class Usuarios extends BaseController {
             $data['micodigo'] = $this->socioModel->find($this->session->id);
 
             $data['mi_equipo'] = $this->socioModel->select('socios.id as id,codigo_socio,patrocinador,fecha_inscripcion,idusuario,idrango,socios.estado as estado_socio,
-                                nombre,cedula,telefono,email,idrol,rango,inscripciones.estado as estado_inscripcion,idsocio')
+                                nombre, usuarios.cedula as cedula,telefono,email,idrol,rango,inscripciones.estado as estado_inscripcion,idsocio')
                                 ->where('patrocinador', $data['micodigo']->id)
                                 ->join('usuarios', 'usuarios.id=socios.idusuario')
                                 ->join('rangos', 'rangos.id=socios.idrango')
                                 ->join('inscripciones', 'inscripciones.idsocio=socios.id', 'left')
-                                ->findAll();
+                                ->findAll();//echo $this->db->getLastQuery();
 
             $data['title'] = 'Mi Equipo';
             $data['main_content'] = 'usuarios/lista_miembros';

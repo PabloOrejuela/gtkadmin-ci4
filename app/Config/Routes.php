@@ -33,3 +33,6 @@ $routes->get('my-wallet', 'BilleteraDigital::index');
 $routes->get('lista-miembros', 'Usuarios::listaMiembros');
 $routes->get('tanque-reserva', 'Usuarios::tanqueReserva');
 $routes->get('getSocios', 'Usuarios::getSocios');
+
+//ADMINISTRACIÓN
+$routes->get('admin-socios-list', 'Administracion::listaMiembros');

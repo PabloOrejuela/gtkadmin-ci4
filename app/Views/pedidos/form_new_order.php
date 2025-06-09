@@ -85,7 +85,7 @@
                         class="form-control"
                         id="total"
                         name="total"
-                        value="130"
+                        value="135"
                         readonly
                         required
                     />

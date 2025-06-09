@@ -96,6 +96,7 @@
                     <div class="col-3 text-center"><a href="<?= site_url(); ?>lista-pedidos">Mis pedidos</a></div>
                     <div class="col-6 text-center">
                         <a href="#"><?= $session->rango; ?></a>
+                        <a href="#"><?= $session->estado_suscripcion; ?></a>
                     </div>
                   </div>
                   <!--end::Row-->

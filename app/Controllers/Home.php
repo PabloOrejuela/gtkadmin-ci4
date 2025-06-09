@@ -44,6 +44,7 @@ class Home extends BaseController {
         }else{ 
 
             $usuario = $this->usuarioModel->_getUsuario($data);
+            
             $ip = $_SERVER['REMOTE_ADDR'];
             $estado = 1;
             
@@ -64,6 +65,15 @@ class Home extends BaseController {
                         $this->usuarioModel->update($usuario->id, $user);
                     }
 
+                    $estadoInscripcion = $this->inscripcionModel->select('estado')->where('idsocio', $usuario->id)->findAll();
+                    $estadoRecompra = $this->pedidoModel->_verificaRecompra($usuario->id);
+
+                    if (isset($estadoInscripcion) && isset($estadoRecompra) && $estadoInscripcion != 0 && $estadoRecompra->estado != 0) {
+                        $suscripcion = "ACTIVO";
+                    }else{
+                        $suscripcion = "INACTIVO";
+                    }
+
                     $sessiondata = [
                         
                         'id' => $usuario->id,
@@ -72,11 +82,11 @@ class Home extends BaseController {
                         'rol' => $usuario->rol,
                         'cedula' => $usuario->cedula,
                         'logged' => $usuario->logged,
-                        'rol' => $usuario->rol,
                         'administracion' => $usuario->administracion,
                         'reportes' => $usuario->reportes,
                         'socios' => $usuario->codigo_socio,
                         'estado' => $usuario->estado,
+                        'estado_suscripcion' => $suscripcion,
                         'rango' => $usuario->rango,
                         'miembro_desde' => $usuario->miembro_desde,
                         'miembros' => $usuario->miembros,

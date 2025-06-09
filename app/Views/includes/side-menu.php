@@ -9,6 +9,29 @@
               role="menu"
               data-accordion="false"
             >
+              <?php
+                if ($session->idrol == 1) {
+                  echo '
+                    <li class="nav-item">
+                      <a href="#" class="nav-link">
+                        <i class="nav-icon bi fa-hammer"></i>
+                        <p>
+                          Administración
+                          <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                      </a>
+                      <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                          <a href="'.site_url().'admin-socios-list" class="nav-link">
+                            <i class="nav-icon bi bi-circle"></i>
+                            <p>Administración de socios</p>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>';
+                }
+              ?>
+              
               <li class="nav-item">
                 <a href="<?= site_url() ?>inicio" class="nav-link">
                   <i class="nav-icon bi bi-house"></i>

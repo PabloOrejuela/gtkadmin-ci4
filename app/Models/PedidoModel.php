@@ -46,4 +46,25 @@ class PedidoModel extends Model {
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    function _verificaRecompra($idsocio){
+        $fechaCadena = date('Y-m');
+        $month = date('m');
+        $year = date('Y');
+        
+        $num_dias = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+        $result = NULL;
+        $builder = $this->db->table('pedidos');
+        $builder->where('fecha_compra BETWEEN "'. date('Y-m-d', strtotime($fechaCadena.'-01')). '" and "'. date('Y-m-d', strtotime($fechaCadena.'-'.$num_dias)).'"');
+        $builder->where('idsocio', $idsocio);
+        $query = $builder->get();
+        if ($query->getResult() != null) {
+            foreach ($query->getResult() as $row) {
+                $result = $row;
+            }
+        }
+        //echo $this->db->getLastQuery();
+        return $result;                               
+    }
 }

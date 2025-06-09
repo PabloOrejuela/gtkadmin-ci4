@@ -160,7 +160,7 @@
                     <label for="validationCustom03" class="form-label">Paquete único mas costo de inscripción:</label>
                     <input
                         type="text"
-                        name="cedula"
+                        name="inscripcion"
                         class="form-control"
                         id="input-inscripcion"
                         value="185.00"
