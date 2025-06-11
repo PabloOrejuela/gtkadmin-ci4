@@ -13,7 +13,15 @@ class SocioModel extends Model {
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'codigo_socio','patrocinador','fecha_inscripcion','idusuario','idrango','estado'
+        'codigo_socio',
+        'patrocinador',
+        'fecha_inscripcion',
+        'idusuario',
+        'idrango',
+        'estado',
+        'nodopadre',
+        'posicion',
+        'porcentaje_billetera'
     ];
 
     protected bool $allowEmptyInserts = false;

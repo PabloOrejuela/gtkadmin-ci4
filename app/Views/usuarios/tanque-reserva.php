@@ -8,7 +8,7 @@
     <div class="card-body">
         <!--begin::Row-->
         <div class="row g-3">
-            <table id="datatablesSimple" class="table table-bordered table-striped">
+            <table id="datatablesSimple" class="table table-bordered table-striped mt-2">
                 <thead>
                     <th class="col-md-1">Codigo</th>
                     <th class="col-md-4">Nombre</th>
@@ -17,7 +17,7 @@
                     <th class="col-md-1">Seleccionar posición</th>
                     <th class="col-md-1" id="div-center">Estado</th>
                 </thead>
-                <tbody>
+                <tbody id="table-datos">
                     <?php
                         if ($sociosReserva) {
                             foreach ($sociosReserva as $socio) {
@@ -31,6 +31,7 @@
                                                 id="selectPosition_'.$socio->id.'" 
                                                 href="#" 
                                                 data-id="'.$socio->id.'"
+                                                data-patrocinador="'.$socio->patrocinador.'"
                                                 data-bs-toggle="modal" 
                                                 data-bs-target="#selectPosition"
                                                 class="btn btn-outline-success"
@@ -45,7 +46,7 @@
                                 echo '</tr>';
                             }
                         } else {
-                            # code...
+                            
                         }
                         
                     ?>
@@ -64,46 +65,49 @@
 
 <!-- Modal Select Posición-->
 <div class="modal fade" id="selectPosition" tabindex="-1" aria-labelledby="selectPosition" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="selectPosition">Seleccionar posición</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-      <h5 class="modal-title" id="staticBackdropLabel">Mensajeros</h5>
-      <input class="form-control" type="hidden" name="id" id="id">
-        <select 
-            class="form-select" 
-            id="select-piernas" 
-            name="piernas"
-            data-style="form-control" 
-            data-live-search="true" 
-        >
-            <option selected>-- Seleccione una posición --</option>
-            <option value="1">Abajo a la izquierda</option>
-            <option value="2">Abajo a la derecha</option>
-        </select>
-        <select 
-            class="form-select" 
-            id="select-posicion" 
-            name="posicion"
-            data-style="form-control" 
-            data-live-search="true" 
-        >
-
-      </div>
-      <div class="modal-footer">
-        <button 
-            type="button" 
-            class="btn btn-secondary" 
-            data-bs-dismiss="modal" 
-            onClick="actualizarMensajero(document.getElementById('select-mensajero').value, document.getElementById('codigo_pedido').value)"
-        >Actualizar</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="selectPosition">Seleccionar posición</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="get" action="<?= site_url().'setPosition';?>">
+                <div class="modal-body" id="modal-body">
+                    <h5 class="modal-title" id="staticBackdropLabel">Mi equipo</h5>
+                    <input class="form-control" type="hidden" name="id" id="id">
+                    <input class="form-control" type="hidden" name="patrocinador" id="patrocinador">
+                    <select 
+                        class="form-select" 
+                        id="select-piernas" 
+                        name="piernas"
+                        data-style="form-control" 
+                        data-live-search="true" 
+                    >
+                        <option selected>-- Seleccione una posición --</option>
+                        <option value="1">Abajo a la izquierda de</option>
+                        <option value="2">Abajo a la derecha de</option>
+                    </select>
+                    <select 
+                        class="form-select" 
+                        id="select-posicion" 
+                        name="posicion"
+                        data-style="form-control" 
+                        data-live-search="true" 
+                    >
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button 
+                        type="submit" 
+                        class="btn btn-secondary" 
+                        data-bs-dismiss="modal"
+                        id="btn-actualizar-posicion"
+                    >Actualizar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="<?= site_url(); ?>public/js/tanque-reserva.js"></script>

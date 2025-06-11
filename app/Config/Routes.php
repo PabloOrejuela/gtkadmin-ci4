@@ -28,11 +28,16 @@ $routes->get('historial-pedidos', 'Pedidos::historialPedidos');
 
 //Mi billetera
 $routes->get('my-wallet', 'BilleteraDigital::index');
+$routes->get('updateCantidadAhorro', 'BilleteraDigital::updateCantidadAhorro');
+$routes->get('transferirBirAhorro', 'BilleteraDigital::transferirBirAhorro');
 
 //MI EQUIPO
 $routes->get('lista-miembros', 'Usuarios::listaMiembros');
 $routes->get('tanque-reserva', 'Usuarios::tanqueReserva');
 $routes->get('getSocios', 'Usuarios::getSocios');
+$routes->get('lista-binaria', 'Usuarios::listaBinaria');
+$routes->get('arbol-binario', 'Usuarios::arbolBinario');
+$routes->get('setPosition', 'Usuarios::setPosition');
 
 //ADMINISTRACIÓN
 $routes->get('admin-socios-list', 'Administracion::listaMiembros');

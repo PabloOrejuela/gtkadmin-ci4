@@ -1,0 +1,17 @@
+#porcentaje{
+    width: 100px;
+}
+
+#inputPorcentaje{
+    color: rgb(233, 37, 30);
+    font-weight: bold;
+    text-align: right;
+    width: 70px;
+}
+
+#inputValorTransferir{
+    color: rgb(233, 37, 30);
+    font-weight: bold;
+    text-align: right;
+    width: 150px;
+}

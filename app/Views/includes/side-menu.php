@@ -52,11 +52,10 @@
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="../widgets/info-box.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Mi billetera</p>
+                    <a href="<?= site_url() ?>my-wallet" class="nav-link">
+                      <i class="nav-icon bi bi-wallet-fill"></i>
+                      <p>Mi billetera </p>
                     </a>
-                  </li>
                 </ul>
               </li>
               <li class="nav-item">
@@ -88,12 +87,6 @@
                   </li>
                 </ul>
               </li>
-              </li>
-                <a href="<?= site_url() ?>my-wallet" class="nav-link">
-                  <i class="nav-icon bi bi-wallet-fill"></i>
-                  <p>Mi billetera </p>
-                </a>
-              </li>
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="nav-icon bi bi-diagram-2"></i>
@@ -105,13 +98,13 @@
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="../layout/unfixed-sidebar.html" class="nav-link">
+                    <a href="<?= site_url() ?>/lista-binaria" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Lista Binaria</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="../layout/fixed-sidebar.html" class="nav-link">
+                    <a href="<?= site_url() ?>/arbol-binario" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Arbol Binario</p>
                     </a>
@@ -141,13 +134,13 @@
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="../layout/unfixed-sidebar.html" class="nav-link">
+                    <a href="<?= site_url() ?>/historial-rango" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Historial de rangos</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="../layout/fixed-sidebar.html" class="nav-link">
+                    <a href="<?= site_url() ?>/progreso-rango" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Seguimiento proceso de rango</p>
                     </a>
@@ -155,7 +148,7 @@
                 </ul>
               </li>
               <li class="nav-item">
-                <a href="../docs/introduction.html" class="nav-link">
+                <a href="<?= site_url() ?>/tablero-lideres" class="nav-link">
                   <i class="nav-icon bi bi-clipboard-fill"></i>
                   <p>Tablero de líderes</p>
                 </a>

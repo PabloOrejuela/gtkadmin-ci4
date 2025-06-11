@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?= site_url(); ?>public/css/lista-miembros.css">
+<link rel="stylesheet" href="<?= site_url(); ?>public/css/lista-socios-admin.css">
 <!--begin::Form Validation-->
 <div class="card card-gtk card-outline mb-4">
     <!--begin::Header-->
@@ -12,12 +12,14 @@
         <div class="row g-3">
             <table id="datatablesSimple" class="table table-bordered table-striped mt-1">
                 <thead>
-                    <th class="col-md-1" id="td-left">Id</th>
-                    <th class="col-md-3">Nombre</th>
-                    <th class="col-md-1">Documento</th>
-                    <th class="col-md-1">Inscripción</th>
-                    <th class="col-md-1">Recompra</th>
-                    <th class="col-md-1">Estado</th>
+                    <th id="td-left">Id</th>
+                    <th>Nombre</th>
+                    <th>Documento</th>
+                    <th>Inscripción</th>
+                    <th>Recompra</th>
+                    <th>Estado</th>
+                    <th>ACCIONES</th>
+
                 </thead>
                 <tbody>
                     <?php
@@ -38,7 +40,7 @@
                                                                 . date('Y-m-d', strtotime($fechaCadena.'-'.$num_dias)).'"')
                                                                 ->where('idsocio', $socio->id)
                                                                 ->findall();
-
+                                
                                 echo '<tr>';
                                 echo '<td id="td-left">'.$socio->id.'</td>';
                                 echo '<td>'.$socio->nombre.'</td>';
@@ -52,7 +54,7 @@
                                 }
                                 
                                 //verifica si el socio tiene recompra activa
-                                if ($recompra[0]->estado == 1) {
+                                if (isset($recompra) && count($recompra) > 0 && $recompra[0]->estado == 1) {
                                     echo '<td>PAGADO</td>';
                                 } else {
                                     echo '<td>PAGO PENDIENTE</td>';
@@ -64,6 +66,8 @@
                                 } else {
                                     echo '<td>INACTIVO</td>';
                                 }
+
+                                echo '<td>Botones</td>';
                                 
                                 echo '</tr>';
                             }

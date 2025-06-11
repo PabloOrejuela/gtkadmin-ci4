@@ -13,7 +13,7 @@ class BirModel extends Model {
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'idsocio','socio_nuevo','fecha','estado'
+        'idsocio','socio_nuevo','fecha','estado','concepto','cantidad'
     ];
 
     protected bool $allowEmptyInserts = false;

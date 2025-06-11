@@ -1,3 +1,22 @@
 #div-center{
     text-align: center;
 }
+
+#modal-body{
+
+}
+
+#select-piernas{
+    width: 300px;
+}
+
+#select-posicion{
+    margin-top: 10px;
+    width: 300px;
+}
+
+.btn-outline-success{
+    font-size: 0.8em;
+    font-weight: bold;
+    padding: 4px;
+}

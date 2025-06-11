@@ -23,6 +23,32 @@ class Usuarios extends BaseController {
     }
 
     /**
+     * undocumented function summary
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function listaBinaria(){
+        echo 'sección en construcción';
+    }
+
+    /**
+     * undocumented function summary
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function arbolBinario(){
+        echo 'sección en construcción';
+    }
+
+    /**
      * Formulario para registro de un nuevo miembro
      *
      * @param 
@@ -75,7 +101,6 @@ class Usuarios extends BaseController {
                 return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
             }else{ 
                 
-                //echo '<pre>'.var_export($usuario, true).'</pre>';exit;
                 //Inserto el nuevo usuario
                 $user = $this->usuarioModel->insert($usuario);
 
@@ -103,26 +128,28 @@ class Usuarios extends BaseController {
                      $bir = [
                         'idsocio' => $this->session->id,
                         'socio_nuevo' => $socio,
+                        'cantidad' => 50,
+                        'concepto' => "BIR POR INSCRIPCION DE NUEVO SOCIO",
                         'fecha' => date('Y-m-d h:m:s'),
                         'estado' => 0,
                     ];
                     $idbir = $this->birModel->insert($bir);
 
                     //Se carga ese BIR por cobrar a la billetera digital
-                    if ($idbir) {
-                        //Si se insertó el BIR cargo el bono en la billetera
-                        $bono = [
-                            'idsocio' => $this->session->id,
-                            'fecha' => date('Y-m-d'),
-                            'tipo_mov' => 3, //INGRESO POR BIR ACREDITADO
-                            'cantidad' => 50,
-                            'origen' => 0,
-                            'concepto' => "INGRESO POR BIR ACREDITADO",
-                            'idbir' => $idbir
-                        ];
+                    // if ($idbir) {
+                    //     //Si se insertó el BIR cargo el bono en la billetera
+                    //     $bono = [
+                    //         'idsocio' => $this->session->id,
+                    //         'fecha' => date('Y-m-d'),
+                    //         'tipo_mov' => 3, //INGRESO POR BIR ACREDITADO
+                    //         'cantidad' => 50,
+                    //         'origen' => 0,
+                    //         'concepto' => "INGRESO POR BIR ACREDITADO",
+                    //         'idbir' => $idbir
+                    //     ];
 
-                        $res = $this->billeteraDigitalModel->insert($bono);
-                    }
+                    //     $res = $this->billeteraDigitalModel->insert($bono);
+                    // }
 
                     //Se registra el pedido inicial con la inscripcion
                     $pedido_inicial = [
@@ -302,7 +329,13 @@ class Usuarios extends BaseController {
             $data['session'] = $this->session;
             $data['sistema'] = $this->sistemaModel->findAll();
 
-            $data['sociosReserva'] = $this->socioModel->join('usuarios', 'socios.idusuario=usuarios.id', 'left')
+            $data['miEquipo'] = $this->socioModel->where('patrocinador', $this->session->id)->findAll();
+
+            //Traigo a los socios debajo del patrocinador que no tienen posición
+            $data['sociosReserva'] = $this->socioModel->select('socios.id as id,codigo_socio,patrocinador,idusuario,nombre,cedula,email,fecha_inscripcion,socios.estado as estado')
+                ->join('usuarios', 'socios.idusuario=usuarios.id', 'left')
+                ->where('posicion','I')
+                ->where('patrocinador', $this->session->id)
                 ->orderBy('nombre', 'asc')
                 ->findall();
 
@@ -316,7 +349,7 @@ class Usuarios extends BaseController {
     }
 
     /**
-     * Sevuelve los socios del equipo que estén en una pierna de la organización
+     * Devuelve los socios del equipo que estén en una pierna de la organización
      *
      * @param 
      * @return void
@@ -325,8 +358,38 @@ class Usuarios extends BaseController {
     public function getSocios() {
 
         $pierna = $this->request->getPostGet('pierna');
-        $equipo = $this->socioModel->where('patrocinador', $this->session->id)->join('usuarios', 'socios.idusuario=usuarios.id', 'left')->findAll();
+        $equipo = $this->socioModel->select('socios.id as id,nombre,codigo_socio,patrocinador')
+                ->where('patrocinador', $this->session->id)
+                ->join('usuarios', 'socios.idusuario=usuarios.id', 'left')
+                ->findAll();
 
         echo json_encode($equipo);
+    }
+
+
+    function setPosition(){
+        $id = $this->request->getPostGet('id');
+        $patrocinador = $this->request->getPostGet('patrocinador');
+
+        $info['nodopadre'] = $this->request->getPostGet('posicion');
+        $info['posicion'] = $this->request->getPostGet('piernas');
+
+        if ($info['nodopadre'] == 0) {
+            $info['nodopadre'] = $patrocinador;
+        }
+
+        if ($info['nodopadre'] == $id) {
+            $info['nodopadre'] = $patrocinador;
+        }
+
+        $data = [
+            'nodopadre'=> $info['nodopadre'],
+            'posicion'=> $info['posicion']
+        ];
+
+        $info['res'] = $this->socioModel->update($id,  $data);
+        //echo $this->db->getLastQuery();
+        //echo json_encode($info);
+        return redirect()->to('tanque-reserva');
     }
 }
