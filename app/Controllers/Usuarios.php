@@ -32,7 +32,30 @@ class Usuarios extends BaseController {
      * @throws conditon
      **/
     public function listaBinaria(){
-        echo 'sección en construcción';
+        $data = $this->acl();
+
+        if ($data['logged'] == 1 && $this->session->miembros == 1) {
+
+            $data['session'] = $this->session;
+            $data['sistema'] = $this->sistemaModel->findAll();
+            $data['micodigo'] = $this->socioModel->find($this->session->id);
+            $data['mi_equipo'] = $this->socioModel->select('socios.id as id,codigo_socio,patrocinador,fecha_inscripcion,idusuario,
+                                idrango,socios.estado as estado_socio,nombre,user,usuarios.cedula as cedula,posicion,
+                                telefono,email,idrol,rango,inscripciones.estado as estado_inscripcion,nodopadre,idsocio')
+                                ->where('patrocinador', $data['micodigo']->id)
+                                ->join('usuarios', 'usuarios.id=socios.idusuario')
+                                ->join('rangos', 'rangos.id=socios.idrango')
+                                ->join('inscripciones', 'inscripciones.idsocio=socios.id', 'left')
+                                ->findAll();//echo $this->db->getLastQuery();
+
+            $data['title'] = 'Lista Binaria ACTUALMENTE EN PROCESO DE DESARROLLO';
+            $data['subtitle'] = 'Lista de miembros en la organización con sus datos y ubicaciones en el binario';
+            $data['main_content'] = 'usuarios/lista_binaria';
+
+            return view('dashboard/index', $data);
+        }else{
+            return redirect()->to('logout');
+        }
     }
 
     /**

@@ -98,13 +98,13 @@
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="<?= site_url() ?>/lista-binaria" class="nav-link">
+                    <a href="<?= site_url() ?>lista-binaria" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Lista Binaria</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="<?= site_url() ?>/arbol-binario" class="nav-link">
+                    <a href="<?= site_url() ?>arbol-binario" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Arbol Binario</p>
                     </a>
