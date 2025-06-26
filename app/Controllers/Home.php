@@ -4,6 +4,15 @@ namespace App\Controllers;
 
 class Home extends BaseController {
 
+    private $meses = [
+        1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril',
+        5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto',
+        9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre'
+    ];
+
+    private $mes;
+    private $anio;
+
     public function acl() {
         $data['idrol'] = $this->session->idrol;
         $data['id'] = $this->session->id;
@@ -12,6 +21,14 @@ class Home extends BaseController {
         $data['miembro_desde'] = $this->session->created_at;
         
         return $data;
+    }
+
+
+    public function __construct(){
+
+        $this->mes = date('m');
+        $this->anio = date('Y');
+
     }
 
     public function index(): string {
@@ -27,6 +44,53 @@ class Home extends BaseController {
             $this->logout();
         }
     }
+
+    public function calculaPuntos() {
+
+        $data = $this->acl();
+        
+        if ($data['logged'] == 1 ) {
+            
+            $data['session'] = $this->session;
+
+            $puntos_izq = $this->socioModel->_calculaPuntos(1, $data['id']);
+            $puntos_der = $this->socioModel->_calculaPuntos(2, $data['id']);
+        
+            //Contar los puntos de cada pierna
+            $socios_izq = $puntos_izq ? count($puntos_izq) : 0;
+            $socios_der = $puntos_der ? count($puntos_der) : 0;
+            
+            //Verfico si tiene un registro de puntos del mes actual
+            $puntosRed = $this->puntosRedModel->where('idsocio', $data['id'])->where('mes', date('m'))->where('anio', date('Y'))->first();
+            
+            if ($puntosRed) {
+                //Si existe actualizo los puntos
+                $this->puntosRedModel->update($puntosRed->id, [
+                    'left_leg' => $socios_izq,
+                    'right_leg' => $socios_der,
+                    'pts_izq' => ($socios_izq*100),
+                    'pts_der' => ($socios_der*100)
+                ]);
+            } else {
+                //Si no existe inserto un nuevo registro
+                $this->puntosRedModel->insert([
+                    'idsocio' => $data['id'],
+                    'left_leg' => $socios_izq,
+                    'right_leg' => $socios_der,
+                    'mes' => date('m'),
+                    'anio' => date('Y'),
+                    'pts_izq' => ($socios_izq*100),
+                    'pts_der' => ($socios_der*100)
+                ]);
+            }
+
+            return redirect()->to('inicio');
+        }else{
+            $this->logout();
+        }
+    }
+
+
 
     public function validate_login(){
         $data = array(
@@ -130,7 +194,10 @@ class Home extends BaseController {
             $data['sistema'] = $this->sistemaModel->findAll();
             $data['users'] = $this->usuarioModel->findAll();
 
+            $this->calculaPuntos();
+
             $data['micodigo'] = $this->socioModel->find($this->session->id);
+            $data['rangos'] = $this->rangoModel->findAll();
             
             $data['mi_equipo'] = $this->socioModel->select('socios.id as id,codigo_socio,patrocinador,fecha_inscripcion,idusuario,idrango,socios.estado as estado_socio,
                                 nombre,cedula,telefono,email,idrol,rango,inscripciones.estado as estado_inscripcion,idsocio')
@@ -144,11 +211,54 @@ class Home extends BaseController {
             $data['pedidos'] = $this->pedidoModel->where('idsocio', $this->session->id)
                                                     ->join('paquetes', 'paquetes.id=pedidos.idpaquete')
                                                     ->findAll();
-            $data['pts_izq'] = 0;
-            $data['pts_der'] = 0;
+            $data['pts'] = $this->puntosRedModel->where('idsocio', $this->session->id)
+                                                    ->where('mes', date('m'))
+                                                    ->where('anio', date('Y'))
+                                                    ->first();
 
-            $data['bir_pendientes'] = $this->birModel->selectCount('id', 'totalBir')->where('idsocio', $this->session->id)->where('estado', 0)->findAll();                         
+            $data['bir_pendientes'] = $this->birModel->selectSum('cantidad', 'totalBir')
+                ->where('idsocio', $this->session->id)
+                ->where('estado', 0)
+                ->findAll();
 
+            $rangoAccede = $this->rangoModel->_verificaMeta(1, $data['rangos']);
+            $data['resumen'] = [
+                'mes'=> $this->meses[date('n')],
+                'meta_rango' => $this->rangoModel->where('rango', $this->session->rango)->findAll(),
+                'accede_rango' => $this->rangoModel->select('rango')->where('id', $rangoAccede['id'])->findAll(),
+                'income' => $rangoAccede['income'],
+            ];
+
+            //actualizo el historial de rango en la db
+            $histRango = $this->histRangoModel->where('idsocio', $this->session->id)
+                                                    ->where('month', $this->mes)
+                                                    ->where('year', $this->anio)
+                                                    ->first();
+            $histRangoData = [
+                'year' => $this->anio,
+                'month' => $this->mes,
+                'left_leg' => $data['pts']->left_leg,
+                'right_leg' => $data['pts']->right_leg,
+                'pts_left' => $data['pts']->pts_izq,
+                'pts_right' => $data['pts']->pts_der,
+                'income' => $data['resumen']['income'],
+                'idrango' => $data['micodigo']->idrango,
+                'idsocio' => $this->session->id,
+                'estado' => 1,
+            ];
+
+            //echo '<pre>'.var_export($histRango, true).'</pre>';exit;
+            if ($histRango) {
+                $this->histRangoModel->where('idsocio', $this->session->id)
+                                                    ->where('month', $this->mes)
+                                                    ->where('year', $this->anio)
+                                                    ->update($histRango->id, $histRangoData);
+            }else{
+                
+                $this->histRangoModel->insert($histRangoData);
+            }
+                
+            
             $data['title'] = 'Inicio';
             $data['subtitle']='Index';
             $data['main_content'] = 'home/inicio';

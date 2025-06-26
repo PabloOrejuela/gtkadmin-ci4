@@ -134,13 +134,13 @@
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="<?= site_url() ?>/historial-rango" class="nav-link">
+                    <a href="<?= site_url() ?>historial-rango" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Historial de rangos</p>
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="<?= site_url() ?>/progreso-rango" class="nav-link">
+                    <a href="<?= site_url() ?>progreso-rango" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Seguimiento proceso de rango</p>
                     </a>
@@ -148,7 +148,7 @@
                 </ul>
               </li>
               <li class="nav-item">
-                <a href="<?= site_url() ?>/tablero-lideres" class="nav-link">
+                <a href="<?= site_url() ?>tablero-lideres" class="nav-link">
                   <i class="nav-icon bi bi-clipboard-fill"></i>
                   <p>Tablero de líderes</p>
                 </a>

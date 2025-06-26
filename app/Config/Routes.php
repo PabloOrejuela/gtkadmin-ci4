@@ -39,5 +39,12 @@ $routes->get('lista-binaria', 'Usuarios::listaBinaria');
 $routes->get('arbol-binario', 'Usuarios::arbolBinario');
 $routes->get('setPosition', 'Usuarios::setPosition');
 
+//RANGOS
+$routes->get('historial-rango', 'Rangos::historialRango');
+
+
 //ADMINISTRACIÓN
 $routes->get('admin-socios-list', 'Administracion::listaMiembros');
+
+//SOCIOS
+$routes->get('tablero-lideres', 'Usuarios::tablerolideres');

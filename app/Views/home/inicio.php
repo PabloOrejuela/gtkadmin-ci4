@@ -8,10 +8,10 @@
         <!--begin::Col-->
         <div class="col-lg-3 col-6">
           <!--begin::Small Box Widget 1-->
-          <div class="small-box text-bg-primary">
+          <div class="small-box text-bg-warning">
             <div class="inner">
-              <h3><?= $pts_izq; ?> pts</h3>
-              <p>Total Volumen izquierda</p>
+              <h3><?= $pts->pts_izq; ?> pts</h3>
+              <p>Total Volumen izquierda: <?= $pts->left_leg; ?> socios activos</p>
             </div>
             <svg
               class="small-box-icon"
@@ -21,7 +21,7 @@
               aria-hidden="true"
             >
               <path
-                d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"
+                d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75zM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 01-1.875-1.875V8.625zM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 013 19.875v-6.75z"
               ></path>
             </svg>
             <a
@@ -36,10 +36,10 @@
         <!--end::Col-->
         <div class="col-lg-3 col-6">
           <!--begin::Small Box Widget 2-->
-          <div class="small-box text-bg-success">
+          <div class="small-box text-bg-warning">
             <div class="inner">
-              <h3><?= $pts_der; ?> pts</h3>
-              <p>Total Volumen derecha</p>
+              <h3><?= $pts->pts_der; ?> pts</h3>
+              <p>Total Volumen derecha: <?= $pts->right_leg; ?> socios activos</p>
             </div>
             <svg
               class="small-box-icon"
@@ -66,8 +66,8 @@
           <!--begin::Small Box Widget 3-->
           <div class="small-box text-bg-warning">
             <div class="inner">
-              <h3><?= $bir_pendientes[0]->totalBir; ?> BIR</h3>
-              <p>Pendientes de cobrar <?= '$'.($bir_pendientes[0]->totalBir*50) ?></p>
+              <h3>$ <?= $bir_pendientes[0]->totalBir; ?></h3>
+              <p>BIR Pendientes de cobrar </p>
             </div>
             <svg
               class="small-box-icon"
@@ -92,10 +92,10 @@
         <!--end::Col-->
         <div class="col-lg-3 col-6">
           <!--begin::Small Box Widget 4-->
-          <div class="small-box text-bg-danger">
+          <div class="small-box text-bg-warning-rango">
             <div class="inner">
               <h3>Rango</h3>
-              <p><?= $session->rango; ?></p>
+              <p id="p-rango"><?= $session->rango; ?> | Estado: <?= $session->estado_suscripcion; ?></p>
             </div>
             <svg
               class="small-box-icon"
@@ -260,7 +260,7 @@
         <!-- /.Start col -->
         <!-- Start col -->
         <div class="col-lg-5 connectedSortable">
-          <div class="card text-white bg-primary bg-gradient border-primary mb-4">
+          <div class="card text-black bg-resumen-financiero bg-gradient border-primary mb-4">
             <div class="card-header border-0">
               <h3 class="card-title">Resumen financiero</h3>
               <div class="card-tools">
@@ -274,7 +274,59 @@
                 </button>
               </div>
             </div>
-            <div class="card-body"><div id="world-map" style="height: 220px"></div></div>
+            <div class="card-body">
+              <table class="table table-condensed" id="table-resumen">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Cantidad de socios inscritos personalmente (Izq/Der): </td>
+                    <td><?= $pts->left_leg.' / '.$pts->right_leg; ?></td>
+                  </tr>
+                  <tr>
+                    <td>Total usuarios activos: </td>
+                    <td><?= $pts->left_leg.' / '.$pts->right_leg; ?></td>
+                  </tr>
+                  <tr>
+                    <td>Estado de la membresía: </td>
+                    <td><?= $session->estado_suscripcion; ?></td>
+                  </tr>
+                  <tr>
+                    <td>BIR Pendientes de cobrar: </td>
+                    <td>$ <?= $bir_pendientes[0]->totalBir; ?></td>
+                  </tr>
+                  <tr>
+                    <td>Rango actual: </td>
+                    <td><?= $session->rango; ?></td>
+                  </tr>
+                  <tr>
+                    <td>Meta del rango: </td>
+                    <td><?= $resumen['meta_rango'][0]->cant_socios_pierna.'/'.$resumen['meta_rango'][0]->cant_socios_pierna; ?></td>
+                  </tr>
+                  <tr>
+                    <td>Meta alcanzada hasta el día <?= date('Y-m-d'); ?></td>
+                    <td><?= $pts->left_leg.' / '.$pts->right_leg; ?></td>
+                  </tr>
+                  <tr>
+                    <td id="td-bold">Cumple la meta del rango <?= $session->rango; ?> para poder cobrar: </td>
+                    <td id="td-bold">NO</td>
+                  </tr>
+                  <tr>
+                    <td id="td-bold">Accede o permanece en el rango: </td>
+                    <td id="td-bold"><?= $resumen['accede_rango'][0]->rango; ?></td>
+                  </tr>
+                  <tr>
+                    <td id="td-bold">Sueldo a cobrar por el mes de: <?= $resumen['mes']; ?></td>
+                    <td id="td-bold">$ <?= number_format($resumen['income'], 2) ?></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <div class="card-footer border-0">
               <!--end::Row-->
             </div>
@@ -283,6 +335,54 @@
         <!-- /.Start col -->
       </div>
       <!-- /.row (main row) -->
+       <!--begin::Row-->
+      <div class="row">
+        <!-- Start col -->
+        <div class="col-lg-7 connectedSortable">
+          <!-- Mi equipo -->
+          <div class="card direct-chat direct-chat-primary mb-4">
+            <div class="card-header">
+              <h3 class="card-title">Gana con GTK Ecuador</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <div class="loren">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vitae posuere lorem, sit amet egestas quam. Quisque eleifend eleifend nibh quis tempus. Nullam id eros ut augue auctor sollicitudin. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vivamus eu massa felis. Nullam eget vulputate justo. Nullam vitae laoreet sapien. Quisque dapibus eget dolor ut molestie. Phasellus tempor turpis a neque facilisis porta. Nam scelerisque tellus odio, a ultrices lacus sollicitudin in.
+
+Donec dui ante, iaculis nec elementum a, efficitur sed turpis. Pellentesque sed quam id lacus aliquet mattis. 
+Mauris eu imperdiet urna, vitae pulvinar mauris. Maecenas lectus sem, aliquet non sem non, posuere ullamcorper libero. Ut congue justo vel lectus vehicula aliquet. Etiam ullamcorper augue tellus, a sollicitudin sapien pulvinar eu. 
+Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+
+<p>GTK Ecuador cree en el avance de la tecnología y de los sistemas de mercadeo en red como uno de los métodos de mayor beneficio para todas las personas.
+
+Consideramos que el mercadeo en red es el mejor sistema de trabajo donde usted lo desarrolla y se beneficia del trabajo de toda su organización por que es mejor trabajar con un equipo de personas que trabajar solo.
+
+En este sistema usted no requiere de ningún requisito, solo el deseo de trabajar y cumplir sus sueños, aquí tiene disponibilidad de tiempo, hacerlo de una forma inteligente sin descuidar sus actividades normales y alcanzar sus metas de acuerdo a su esfuerzo.
+"Si usted nació pobre no es su culpa; pero si muere pobre... eso si es su culpa".</p>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.Mi equipo-->
+        </div>
+        <!-- /.Start col -->
+        <!-- Start col -->
+        <div class="col-lg-5 connectedSortable">
+          <!-- Mi equipo -->
+          <div class="card direct-chat direct-chat-primary mb-4">
+            <div class="card-header">
+              <h3 class="card-title">Plan de compensación GTK</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <img src="<?= site_url(); ?>public/images/pc-bir-2025.jpeg" />
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.Mi equipo-->
+        </div>
+        <!-- /.Start col -->
+      </div>
     </div>
     <!--end::Container-->
   </div>

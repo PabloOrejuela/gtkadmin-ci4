@@ -4,24 +4,16 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class SocioModel extends Model {
+class LiderModel extends Model {
 
-    protected $table            = 'socios';
+    protected $table            = 'lideres';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'codigo_socio',
-        'patrocinador',
-        'fecha_inscripcion',
-        'idusuario',
-        'idrango',
-        'estado',
-        'nodopadre',
-        'posicion',
-        'porcentaje_billetera'
+        'idsocio','cant_socios'
     ];
 
     protected bool $allowEmptyInserts = false;
@@ -53,33 +45,4 @@ class SocioModel extends Model {
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
-
-    function _calculaPuntos($pierna, $idsocio){
-        /*
-        $fechaCadena = date('Y-m');
-        $month = date('m');
-        $year = date('Y');
-        
-        $num_dias = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-        */
-
-        //Tarigo el total de socios que son directos de un socio o son hijos del socio en una pierna en ese mes
-        
-        $result = NULL;
-        $builder = $this->db->table('socios');
-        $builder->where('patrocinador', $idsocio);
-        $builder->orWhere('nodopadre', $idsocio);
-        
-        $query = $builder->get();
-        if ($query->getResult() != null) {
-            foreach ($query->getResult() as $row) {
-
-                if ($row->estado == 1 && $row->posicion == $pierna) {
-                    $result[] = $row;
-                }
-            }
-        }
-        //echo $this->db->getLastQuery();
-        return $result;                               
-    }
 }

@@ -12,15 +12,18 @@ use Psr\Log\LoggerInterface;
 use App\Models\BilleteraDigitalModel;
 use App\Models\BirModel;
 use App\Models\CiudadModel;
+use App\Models\HistRangoModel;
 use App\Models\InscripcionModel;
+use App\Models\LiderModel;
 use App\Models\PaqueteModel;
 use App\Models\PedidoModel;
 use App\Models\ProvinciaModel;
+use App\Models\PuntosRedModel;
 use App\Models\RolModel;
+use App\Models\RangoModel;
 use App\Models\SistemaModel;
 use App\Models\SocioModel;
 use App\Models\UsuarioModel;
-
 
 /**
  * Class BaseController
@@ -59,8 +62,8 @@ abstract class BaseController extends Controller
     /**
      * @return void
      */
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
-    {
+    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger){
+
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 
@@ -68,12 +71,16 @@ abstract class BaseController extends Controller
         $this->db = \Config\Database::connect();
         $this->billeteraDigitalModel = new BilleteraDigitalModel($this->db);
         $this->birModel = new BirModel($this->db);
+        $this->histRangoModel = new HistRangoModel($this->db);
         $this->ciudadModel = new CiudadModel($this->db);
         $this->inscripcionModel = new InscripcionModel($this->db);
+        $this->liderModel = new LiderModel($this->db);
         $this->paqueteModel = new PaqueteModel($this->db);
         $this->pedidoModel = new PedidoModel($this->db);
         $this->provinciaModel = new ProvinciaModel($this->db);
+        $this->puntosRedModel = new PuntosRedModel($this->db);
         $this->rolModel = new RolModel($this->db);
+        $this->rangoModel = new RangoModel($this->db);
         $this->sistemaModel = new SistemaModel($this->db);
         $this->socioModel = new SocioModel($this->db);
         $this->usuarioModel = new UsuarioModel($this->db);

@@ -49,7 +49,7 @@ class Usuarios extends BaseController {
                                 ->findAll();//echo $this->db->getLastQuery();
 
             $data['title'] = 'Lista Binaria ACTUALMENTE EN PROCESO DE DESARROLLO';
-            $data['subtitle'] = 'Lista de miembros en la organización con sus datos y ubicaciones en el binario';
+            $data['subtitle'] = 'Lista de socios en la organización con sus datos y ubicaciones en el binario';
             $data['main_content'] = 'usuarios/lista_binaria';
 
             return view('dashboard/index', $data);
@@ -304,7 +304,7 @@ class Usuarios extends BaseController {
     }
 
     /**
-     * Grid de miembros registrados
+     * Grid de socios registrados
      *
      * @param 
      * @return void
@@ -337,7 +337,7 @@ class Usuarios extends BaseController {
     }
 
     /**
-     * Tanque de reserva miembros registrados aún no ubicados
+     * Tanque de reserva socios registrados aún no ubicados
      *
      * @param 
      * @return void
@@ -387,6 +387,68 @@ class Usuarios extends BaseController {
                 ->findAll();
 
         echo json_encode($equipo);
+    }
+
+    /**
+     * undocumented function summary
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function tablerolideres(){
+        $data = $this->acl();
+
+        if ($data['logged'] == 1 && $this->session->miembros == 1) {
+
+            $data['session'] = $this->session;
+            $data['sistema'] = $this->sistemaModel->findAll();
+            $data['micodigo'] = $this->socioModel->find($this->session->id);
+
+            $data['lideres'] = $this->socioModel->select('socios.id as id,codigo_socio,rango,nombre')
+                                ->join('usuarios', 'usuarios.id=socios.idusuario')
+                                ->join('rangos', 'rangos.id=socios.idrango')
+                                ->findAll();
+
+            if ($data['lideres']) {
+                foreach ($data['lideres'] as $lider) {
+                    $dataLider = $this->liderModel->where('idsocio', $lider->id)->first();
+                    $cant_socios = $this->socioModel->where('patrocinador', $lider->id)->countAllResults();
+                    $lider->cant_socios = $cant_socios;
+
+                    // actualizo la tabla de líderes
+                    $liderInsert = [
+                        'idsocio' => $lider->id,
+                        'cant_socios' => $cant_socios
+                    ];
+
+                    if ($dataLider) {
+                        
+                        $this->liderModel->update($dataLider->id, $liderInsert);
+                    } else {
+                        $this->liderModel->insert($liderInsert);
+                    }
+                }
+            }
+
+            $data['tabla_lideres'] = $this->liderModel->select('lideres.id as id, socios.id as idsocio, codigo_socio, nombre,cant_socios')
+                                ->join('socios', 'socios.id=lideres.idsocio')
+                                ->join('usuarios', 'usuarios.id=socios.idusuario')
+                                ->orderBy('cant_socios', 'desc')
+                                ->findAll();
+            
+
+            //echo '<pre>'.var_export($data['tabla_lideres'], true).'</pre>';exit;
+            $data['title'] = 'Tablero de Líderes';
+            $data['subtitle'] = 'Lista de socios en la organización que mas socios nuevos han captado para su equipo';
+            $data['main_content'] = 'usuarios/tablero_lideres';
+
+            return view('dashboard/index', $data);
+        }else{
+            return redirect()->to('logout');
+        }
     }
 
 

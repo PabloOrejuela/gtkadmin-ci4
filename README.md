@@ -1,6 +1,7 @@
 <h3>Cambios</h3>
 <h5>Desarrollo</h5>
 <ul>
+    <li>Implementado el resúmen financiero en el inicio</li>
     <li>Implementada la sección de Lista Binaria</li>
     <li>Implementada la sección de la billetera digital</li>
 </ul>

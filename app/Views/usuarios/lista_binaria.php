@@ -25,7 +25,10 @@
                 <tbody>
                     <?php
                         use App\Models\PedidoModel;
+                        use App\Models\SocioModel;
                         $this->pedidoModel = new PedidoModel();
+                        $this->socioModel = new SocioModel();
+                        $this->db = \Config\Database::connect();
 
                         if ($mi_equipo) {
                             foreach ($mi_equipo as $socio) {
@@ -33,28 +36,33 @@
                                 $fechaCadena = date('Y-m');
                                 $month = date('m');
                                 $year = date('Y');
-                                $puntos_izquierda = 0;
-                                $puntos_derecha = 0;
-                                
+                                $puntos_izquierda = $this->socioModel->where('nodopadre', $socio->id)->where('posicion', 1)->findAll();
+                                $puntos_derecha = $this->socioModel->where('nodopadre', $socio->id)->where('posicion', 2)->findAll();
+                                $patrocinador = $this->socioModel->where('socios.id', $socio->patrocinador)
+                                                ->join('usuarios', 'usuarios.id = socios.idusuario')->first();
+                                                //echo $this->db->getLastQuery();exit;
+                                $nodopadre = $this->socioModel->where('socios.id', $socio->nodopadre)
+                                                ->join('usuarios', 'usuarios.id = socios.idusuario')->first();
+
                                 echo '<tr>';
                                 echo '<td id="td-left">'.$socio->id.'</td>';
                                 echo '<td id="td-left">'.$socio->user.'</td>';
                                 echo '<td>'.$socio->nombre.'</td>';
                                 echo '<td>'.$socio->cedula.'</td>';
                                 echo '<td>'.$socio->rango.'</td>';
-                                echo '<td>'.$socio->patrocinador.'</td>';
-                                echo '<td>'.$socio->nodopadre.'</td>';
+                                echo '<td>'.$patrocinador->nombre.'</td>';
+                                echo '<td>'.$nodopadre->nombre.'</td>';
 
-                                //verifica el pago de la inscripción
-                                if ($socio->posicion == 1) {
+                                //verifica cual pierna es mayor
+                                if (count($puntos_izquierda) > count($puntos_derecha)) {
                                     echo '<td>Izquierda</td>';
-                                } else if($socio->posicion == 2){
+                                } else if(count($puntos_izquierda) < count($puntos_derecha)){
                                     echo '<td>Derecha</td>';
                                 }else{
-                                    echo '<td>Sin ubicación</td>';
+                                    echo '<td>Iguales</td>';
                                 }
                                 
-                                echo '<td>'.$puntos_izquierda.' / '.$puntos_derecha.'</td>';
+                                echo '<td>'.count($puntos_izquierda).' / '.count($puntos_derecha).'</td>';
                                 
                                 echo '</tr>';
                             }

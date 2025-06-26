@@ -52,11 +52,16 @@
                                 }
                                 
                                 //verifica si el socio tiene recompra activa
-                                if ($recompra[0]->estado == 1) {
-                                    echo '<td>PAGADO</td>';
+                                if ($recompra) {
+                                    if ($recompra[0]->estado == 1) {
+                                        echo '<td>PAGADO</td>';
+                                    } else {
+                                        echo '<td>PAGO PENDIENTE</td>';
+                                    }
                                 } else {
-                                    echo '<td>PAGO PENDIENTE</td>';
+                                    echo '<td>SIN RECOMPRA</td>';
                                 }
+                                
 
                                 //verifica el estado de un socio
                                 if ($socio->estado_socio == 1 && $socio->estado_inscripcion == 1) {
