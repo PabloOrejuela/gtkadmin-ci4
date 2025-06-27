@@ -27,14 +27,38 @@ class Rangos extends BaseController {
             $data['sistema'] = $this->sistemaModel->findAll();
 
             $data['historialRangos'] = $this->histRangoModel->select(
-                'year,month,left_leg,right_leg,pts_left,pts_right,income,hist_rangos.idrango as idrango,hist_rangos.idsocio as idsocio,hist_rangos.estado as estado,rangos.rango as rango
-            ')->where('idsocio', $this->session->id)
+                'year,month,left_leg,right_leg,pts_left,pts_right,income,hist_rangos.idrango as idrango,
+                hist_rangos.idsocio as idsocio,hist_rangos.estado as estado,rangos.rango as rango')->where('idsocio', $this->session->id)
                 ->join('rangos', 'rangos.id=hist_rangos.idrango')
                 ->join('socios', 'socios.id=hist_rangos.idsocio')
                 ->findAll();
-
+            
             $data['title'] = 'Historial de Rangos';
             $data['main_content'] = 'rangos/historial_rangos';
+            return view('dashboard/index', $data);
+        }else{
+            return redirect()->to('logout');
+        }
+    }
+
+    public function progresoRangos() {
+        
+        $data = $this->acl();
+        
+        if ($data['logged'] == 1 && $this->session->miembros == 1) {
+
+            $data['session'] = $this->session;
+            $data['sistema'] = $this->sistemaModel->findAll();
+
+            $data['historialRangos'] = $this->histRangoModel->select(
+                'year,month,left_leg,right_leg,pts_left,pts_right,income,hist_rangos.idrango as idrango,
+                hist_rangos.idsocio as idsocio,hist_rangos.estado as estado,rangos.rango as rango')->where('idsocio', $this->session->id)
+                ->join('rangos', 'rangos.id=hist_rangos.idrango')
+                ->join('socios', 'socios.id=hist_rangos.idsocio')
+                ->findAll();
+            
+            $data['title'] = 'Seguimiento del Progreso del Rango';
+            $data['main_content'] = 'rangos/progreso_rangos';
             return view('dashboard/index', $data);
         }else{
             return redirect()->to('logout');

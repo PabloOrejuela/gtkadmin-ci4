@@ -236,7 +236,7 @@ class Home extends BaseController {
             $data['resumen'] = [
                 'mes'=> $this->meses[date('n')],
                 'meta_rango' => $this->rangoModel->where('rango', $this->session->rango)->findAll(),
-                'accede_rango' => $this->rangoModel->select('rango')->where('id', $rangoAccede['id'])->findAll(),
+                'accede_rango' => $this->rangoModel->select('id,rango')->where('id', $rangoAccede['id'])->findAll(),
                 'income' => $rangoAccede['income'],
             ];
 
@@ -253,12 +253,10 @@ class Home extends BaseController {
                 'pts_left' => $data['pts']->pts_izq,
                 'pts_right' => $data['pts']->pts_der,
                 'income' => $data['resumen']['income'],
-                'idrango' => $data['micodigo']->idrango,
+                'idrango' => $data['resumen']['accede_rango'][0]->id,
                 'idsocio' => $this->session->id,
-                'estado' => 1,
             ];
 
-            //echo '<pre>'.var_export($histRango, true).'</pre>';exit;
             if ($histRango) {
                 $this->histRangoModel->where('idsocio', $this->session->id)
                                                     ->where('month', $this->mes)
@@ -267,8 +265,12 @@ class Home extends BaseController {
             }else{
                 
                 $this->histRangoModel->insert($histRangoData);
+
             }
-                
+            
+            //Actualizo el rango en la tabla socios
+            $dataSocio = ['idrango' => $data['resumen']['accede_rango'][0]->id,];
+            $this->socioModel->update($this->session->id, $dataSocio);
             
             $data['title'] = 'Inicio';
             $data['subtitle']='Index';

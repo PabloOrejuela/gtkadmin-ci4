@@ -131,7 +131,7 @@
       <div class="row">
         <!-- Start col -->
         <div class="col-lg-7 connectedSortable">
-          <!-- Mi equipo -->
+          <!-- Mis pedidos -->
           <div class="card direct-chat direct-chat-primary mb-4">
             <div class="card-header">
               <h3 class="card-title">Lista de Pedidos de la semana</h3>
@@ -191,7 +191,7 @@
             </div>
             <!-- /.card-body -->
           </div>
-          <!-- /.Mi equipo-->
+          <!-- /.Mis pedidos-->
           <!-- /.card -->
           <!-- Mi equipo -->
           <div class="card direct-chat direct-chat-primary mb-4">
@@ -237,7 +237,7 @@
                     }else{
                       echo '<tr class="align-middle">
                             <td>1.</td>
-                            <td>SIN DATOS</td>
+                            <td colspan="3">SIN DATOS</td>
                             <td>
                               <div class="progress progress-xs">
                                 <div

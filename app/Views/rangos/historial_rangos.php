@@ -32,8 +32,8 @@
                             <td>'.$fecha.'</td>
                             <td>'.$hr->left_leg.' socios activos</td>
                             <td>'.$hr->right_leg.' socios activos</td>
-                            <td>$ '.number_format($hr->income, 2).'</td>
-                            <td>'.$hr->left_leg.'/'.$hr->right_leg.'</td>';
+                            <td>'.$hr->left_leg.'/'.$hr->right_leg.'</td>
+                            <td>$ '.number_format($hr->income, 2).'</td>';
 
                             if ($hr->estado == 1) {
                                 echo '<td>SI</td>';

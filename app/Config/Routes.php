@@ -41,6 +41,7 @@ $routes->get('setPosition', 'Usuarios::setPosition');
 
 //RANGOS
 $routes->get('historial-rango', 'Rangos::historialRangos');
+$routes->get('progreso-rango', 'Rangos::progresoRangos');
 
 
 //ADMINISTRACIÓN
