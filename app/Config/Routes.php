@@ -40,7 +40,7 @@ $routes->get('arbol-binario', 'Usuarios::arbolBinario');
 $routes->get('setPosition', 'Usuarios::setPosition');
 
 //RANGOS
-$routes->get('historial-rango', 'Rangos::historialRango');
+$routes->get('historial-rango', 'Rangos::historialRangos');
 
 
 //ADMINISTRACIÓN

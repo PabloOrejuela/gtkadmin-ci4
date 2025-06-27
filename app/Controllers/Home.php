@@ -93,10 +93,10 @@ class Home extends BaseController {
 
 
     public function validate_login(){
-        $data = array(
+        $data = [
             'user' => $this->request->getPostGet('user'),
             'password' => $this->request->getPostGet('password'),
-        );
+        ];
         
         $this->validation->setRuleGroup('login');
         
@@ -107,8 +107,19 @@ class Home extends BaseController {
             return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
         }else{ 
 
-            $usuario = $this->usuarioModel->_getUsuario($data);
+            //$usuario = $this->usuarioModel->_getUsuario($data);
+
+            // recuperamos el hash del usuario almacenado en base de datos
+            $usuario = $this->usuarioModel->select('usuarios.id as id,rango,acuerdo_terminos,nombre,user,telefono,email,password,imagen,cedula,idrol,logged,rol,
+            administracion,reportes,codigo_socio,miembros,usuarios.estado as estado,usuarios.created_at as miembro_desde')
+                    ->where('user', $data['user'])
+                    ->join('socios', 'socios.idusuario=usuarios.id')
+                    ->join('rangos', 'rangos.id=socios.idrango')
+                    ->join('roles', 'roles.id=usuarios.idrol')
+                    ->findAll();
             
+            // comprobamos si la contraseña enviada desde el formulario se corresponde con el hash alojado
+
             $ip = $_SERVER['REMOTE_ADDR'];
             $estado = 1;
             
@@ -116,21 +127,21 @@ class Home extends BaseController {
                 return redirect()->to('/');
             }else{
                 
-                if (isset($usuario) && $usuario != NULL ) {
+                if (isset($usuario) && $usuario != NULL && password_verify($data['password'], $usuario[0]->password)) {
                     //valido el login y pongo el id en sesion  && $usuario->id != 1 
 
-                    if ($usuario->logged == 1 ) {
+                    if ($usuario[0]->logged == 1) {
                         //Está logueado así que lo deslogueo
                         $user = [
-                            'id' => $usuario->id,
+                            'id' => $usuario[0]->id,
                             'logged' => 0,
                             'ip' => 0
                         ];
-                        $this->usuarioModel->update($usuario->id, $user);
+                        $this->usuarioModel->update($usuario[0]->id, $user);
                     }
 
-                    $estadoInscripcion = $this->inscripcionModel->select('estado')->where('idsocio', $usuario->id)->findAll();
-                    $estadoRecompra = $this->pedidoModel->_verificaRecompra($usuario->id);
+                    $estadoInscripcion = $this->inscripcionModel->select('estado')->where('idsocio', $usuario[0]->id)->findAll();
+                    $estadoRecompra = $this->pedidoModel->_verificaRecompra($usuario[0]->id);
 
                     if (isset($estadoInscripcion) && isset($estadoRecompra) && $estadoInscripcion != 0 && $estadoRecompra->estado != 0) {
                         $suscripcion = "ACTIVO";
@@ -140,25 +151,25 @@ class Home extends BaseController {
 
                     $sessiondata = [
                         
-                        'id' => $usuario->id,
-                        'nombre' => $usuario->nombre,
-                        'idrol' => $usuario->idrol,
-                        'rol' => $usuario->rol,
-                        'cedula' => $usuario->cedula,
-                        'logged' => $usuario->logged,
-                        'administracion' => $usuario->administracion,
-                        'reportes' => $usuario->reportes,
-                        'socios' => $usuario->codigo_socio,
-                        'estado' => $usuario->estado,
+                        'id' => $usuario[0]->id,
+                        'nombre' => $usuario[0]->nombre,
+                        'idrol' => $usuario[0]->idrol,
+                        'rol' => $usuario[0]->rol,
+                        'cedula' => $usuario[0]->cedula,
+                        'logged' => $usuario[0]->logged,
+                        'administracion' => $usuario[0]->administracion,
+                        'reportes' => $usuario[0]->reportes,
+                        'socios' => $usuario[0]->codigo_socio,
+                        'estado' => $usuario[0]->estado,
                         'estado_suscripcion' => $suscripcion,
-                        'rango' => $usuario->rango,
-                        'miembro_desde' => $usuario->miembro_desde,
-                        'miembros' => $usuario->miembros,
-                        'reportes' => $usuario->reportes,
-                        'administracion' => $usuario->administracion,
+                        'rango' => $usuario[0]->rango,
+                        'miembro_desde' => $usuario[0]->miembro_desde,
+                        'miembros' => $usuario[0]->miembros,
+                        'reportes' => $usuario[0]->reportes,
+                        'administracion' => $usuario[0]->administracion,
                     ];
                     
-                    $iduser = $usuario->id;
+                    $iduser = $usuario[0]->id;
 
                     $user = [
                         'logged' => 1,

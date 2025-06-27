@@ -55,7 +55,7 @@ class UsuarioModel extends Model {
             cedula,idrol,logged,rol,administracion,reportes,codigo_socio,miembros,
             '.$this->table.'.estado as estado,
             '.$this->table.'.created_at as miembro_desde'
-        )->where('user', $usuario['user'])->where('password', md5($usuario['password']))->where($this->table.'.estado', 1);
+        )->where('user', $usuario['user'])->where('password', sha1($usuario['password']))->where($this->table.'.estado', 1);
         $builder->join('socios', 'socios.idusuario=usuarios.id');
         $builder->join('rangos', 'rangos.id=socios.idrango');
         $builder->join('roles', 'roles.id=usuarios.idrol');

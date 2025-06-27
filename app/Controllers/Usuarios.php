@@ -99,10 +99,17 @@ class Usuarios extends BaseController {
 
         if ($data['logged'] == 1) {
 
+            // recogemos datos enviados desde el formulario de registro
+            $user = filter_var(strtoupper($this->request->getPostGet('user')), FILTER_SANITIZE_STRING);
+            $pass = filter_var($this->request->getPostGet('password'), FILTER_SANITIZE_STRING);
+
+            // generamos el hash a partir de la contraseña enviada desde el formulario
+            $pass_hashed = password_hash($pass, PASSWORD_BCRYPT);
+
             $usuario = [
                 'nombre' => strtoupper($this->request->getPostGet('nombre')),
-                'user' => strtoupper($this->request->getPostGet('user')),
-                'password' => strtoupper($this->request->getPostGet('password')),
+                'user' => strtoupper($user),
+                'password' => $pass_hashed,
                 'telefono' => strtoupper($this->request->getPostGet('telefono')),
                 'telefono_2' => strtoupper($this->request->getPostGet('telefono_2')),
                 'cedula' => strtoupper($this->request->getPostGet('cedula')),
