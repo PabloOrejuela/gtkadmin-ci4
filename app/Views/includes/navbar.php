@@ -43,12 +43,12 @@
                 </a>
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item">
-                  <i class="bi bi-people-fill me-2"></i> 8 friend requests
+                  <i class="bi bi-people-fill me-2"></i> 8 mensajes de amigos
                   <span class="float-end text-secondary fs-7">12 hours</span>
                 </a>
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item">
-                  <i class="bi bi-file-earmark-fill me-2"></i> 3 new reports
+                  <i class="bi bi-file-earmark-fill me-2"></i> 3 nuevos reportes
                   <span class="float-end text-secondary fs-7">2 days</span>
                 </a>
                 <div class="dropdown-divider"></div>
@@ -68,7 +68,7 @@
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                 <img
-                  src="<?= site_url(); ?>public/adminlte4/assets/img/user2-160x160.jpg"
+                  src="<?= site_url(); ?>public/adminlte4/assets/img/person.png"
                   class="user-image rounded-circle shadow"
                   alt="User Image"
                 />
@@ -78,7 +78,7 @@
                 <!--begin::User Image-->
                 <li class="user-header text-bg-primary">
                   <img
-                    src="<?= site_url(); ?>public/adminlte4/assets/img/user2-160x160.jpg"
+                    src="<?= site_url(); ?>public/adminlte4/assets/img/person.png"
                     class="rounded-circle shadow"
                     alt="User Image"
                   />

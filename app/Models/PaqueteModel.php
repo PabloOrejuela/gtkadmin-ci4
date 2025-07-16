@@ -4,8 +4,8 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class PaqueteModel extends Model
-{
+class PaqueteModel extends Model {
+    
     protected $table            = 'paquetes';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;

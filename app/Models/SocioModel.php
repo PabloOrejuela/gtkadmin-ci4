@@ -3,8 +3,12 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Models\InscripcionModel;
+use App\Models\PedidoModel;
+
 
 class SocioModel extends Model {
+    
 
     protected $table            = 'socios';
     protected $primaryKey       = 'id';
@@ -54,21 +58,15 @@ class SocioModel extends Model {
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    function _calculaPuntos($pierna, $idsocio){
-        /*
-        $fechaCadena = date('Y-m');
-        $month = date('m');
-        $year = date('Y');
+    function _getCantSociosActivosPierna($pierna, $idsocio, $campo){
         
-        $num_dias = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-        */
-
-        //Tarigo el total de socios que son directos de un socio o son hijos del socio en una pierna en ese mes
+        //Tarigo el total de socios que son directos de un socio o son hijos del socio en una pierna en ese mes y que estén activos
         
         $result = NULL;
         $builder = $this->db->table('socios');
-        $builder->where('patrocinador', $idsocio);
-        $builder->orWhere('nodopadre', $idsocio);
+        $builder->where($campo, $idsocio);
+        $builder->where('posicion', $pierna);
+        $builder->where('estado', 1);
         
         $query = $builder->get();
         if ($query->getResult() != null) {
@@ -81,5 +79,55 @@ class SocioModel extends Model {
         }
         //echo $this->db->getLastQuery();
         return $result;                               
+    }
+
+    /**
+     * Verfica y actualiza el estado de un socio
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function _actualizaEstado($arraySocios){
+        $this->inscripcionModel = new InscripcionModel();
+        $this->pedidoModel = new PedidoModel();
+
+        $fechaCadena = date('Y-m');
+        $month = date('m');
+        $year = date('Y');
+        
+        $num_dias = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+        //Verifica si la variable no es null
+        if ($arraySocios) {
+            foreach ($arraySocios as $key => $socio) {
+                
+                //Verifica si tiene pagada la inscripcion
+                if ($socio->id) {
+                    $inscripcion = $this->inscripcionModel->select('estado')->where('idsocio', $socio->id)->first();
+                }
+
+                //Verifica si tiene pagada la inscripcion
+                if ($socio->id) {
+                    $recompra = $this->pedidoModel->select('estado')
+                            ->where('idsocio', $socio->id)
+                            ->where('fecha_compra BETWEEN "'. date('Y-m-d', strtotime($fechaCadena.'-01')). '" and "'. date('Y-m-d', strtotime($fechaCadena.'-'.$num_dias)).'"')
+                            ->first();
+                }
+                //Actualiza el estado
+                $builder = $this->db->table('socios');
+                $builder->where('id', $socio->id);
+
+                if (isset($inscripcion) && isset($recompra)) {
+                    if ($inscripcion->estado == 1 && $recompra->estado == 1) {
+                        $builder->set('estado', 1);
+                    }
+                }else{
+                    $builder->set('estado', 0);
+                }
+                $builder->update();
+                
+            }
+        }
     }
 }

@@ -17,11 +17,6 @@ class Administracion extends BaseController {
     }
 
 
-    public function index()
-    {
-        //
-    }
-
     /**
      * Grid de miembros registrados para administrarlos
      *
@@ -50,6 +45,40 @@ class Administracion extends BaseController {
             $data['title'] = 'Administración';
             $data['subtitle'] = 'Administración de socios';
             $data['main_content'] = 'administracion/lista_socios';
+            return view('dashboard/index', $data);
+        }else{
+            return redirect()->to('logout');
+        } 
+    }
+
+    /**
+     * Grid de miembros registrados para administrarlos
+     *
+     * @param 
+     * @return void
+     * @throws conditon
+     **/
+    public function reportePagosSocios() {
+
+        $data = $this->acl();
+        
+        if ($data['logged'] == 1 && $this->session->miembros == 1) {
+
+            $data['session'] = $this->session;
+            $data['sistema'] = $this->sistemaModel->findAll();
+            $data['micodigo'] = $this->socioModel->find($this->session->id);
+
+            $data['resultados'] = $this->socioModel->select('socios.id as id,codigo_socio,patrocinador,fecha_inscripcion,idusuario,idrango,socios.estado as estado_socio,
+                                nombre, usuarios.cedula as cedula,telefono,email,idrol,rango,inscripciones.estado as estado_inscripcion,idsocio')
+                                ->join('usuarios', 'usuarios.id=socios.idusuario')
+                                ->join('rangos', 'rangos.id=socios.idrango')
+                                ->join('inscripciones', 'inscripciones.idsocio=socios.id', 'left')
+                                ->findAll();
+
+
+            $data['title'] = 'Administración';
+            $data['subtitle'] = 'Reporte de resultados mensuales';
+            $data['main_content'] = 'administracion/reporte_resultados_socios';
             return view('dashboard/index', $data);
         }else{
             return redirect()->to('logout');

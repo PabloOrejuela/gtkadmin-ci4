@@ -297,8 +297,8 @@
                     <td><?= $session->estado_suscripcion; ?></td>
                   </tr>
                   <tr>
-                    <td>BIR Pendientes de cobrar: </td>
-                    <td>$ <?= $bir_pendientes[0]->totalBir; ?></td>
+                    <td id="td-bold">BIR Pendientes de cobrar: </td>
+                    <td id="td-bold">$ <?= $bir_pendientes[0]->totalBir; ?></td>
                   </tr>
                   <tr>
                     <td>Rango actual: </td>
@@ -314,7 +314,7 @@
                   </tr>
                   <tr>
                     <td id="td-bold">Cumple la meta del rango <?= $session->rango; ?> para poder cobrar: </td>
-                    <td id="td-bold">NO</td>
+                    <td id="td-bold"><?= $resumen['cumpleMeta'] == 1 ? "SI" : "NO"; ?></td>
                   </tr>
                   <tr>
                     <td id="td-bold">Accede o permanece en el rango: </td>
@@ -323,6 +323,14 @@
                   <tr>
                     <td id="td-bold">Sueldo a cobrar por el mes de: <?= $resumen['mes']; ?></td>
                     <td id="td-bold">$ <?= number_format($resumen['income'], 2) ?></td>
+                  </tr>
+                  <tr>
+                    <td id="td-bold"></td>
+                    <td id="td-bold"></td>
+                  </tr>
+                  <tr>
+                    <td id="td-bold-total">TOTAL A COBRAR POR EL MES DE: <?= $resumen['mes'].' DEL '.$resumen['anio'] ; ?></td>
+                    <td id="td-bold-total">$ <?= number_format(($resumen['income'] + $bir_pendientes[0]->totalBir), 2) ?></td>
                   </tr>
                 </tbody>
               </table>

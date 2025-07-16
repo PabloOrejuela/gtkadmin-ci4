@@ -24,12 +24,20 @@
           </div>
           <p id="error-message"><?= session('errors.user');?> </p>
           <div class="input-group mb-3">
-            <input type="password" class="form-control" name="password" placeholder="Password" value="17055">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="17055">
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>
               </div>
             </div>
+          </div>
+          <p id="error-message"><?= session('errors.password');?> </p>
+          <div class="row mb-4">
+            <!-- /.col -->
+            <div class="col-12">
+              <a class="link-opacity-20" href="#" id="verPassword"><span class="fas fa-eye"> Ver password</span></a>
+            </div>
+            <!-- /.col -->
           </div>
           <p id="error-message"><?= session('errors.password');?> </p>
           <div class="row">

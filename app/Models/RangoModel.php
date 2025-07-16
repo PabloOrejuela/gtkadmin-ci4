@@ -44,13 +44,23 @@ class RangoModel extends Model {
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function _verificaMeta($valor, $rangos){
+    public function _verificaMeta($puntos, $rangos){
+        $piernaMenor = 0;
         $res = null;
+        
+        //verifico si las dos piernas son iguales y retorno la menor
+        if ($puntos->left_leg >= $puntos->right_leg) {
+            $piernaMenor = $puntos->right_leg;
+        }else{
+            $piernaMenor = $puntos->left_leg;
+        }
+
         foreach ($rangos as $key => $rango) {
             
-            if ($valor >= $rango->cant_socios_pierna) {
+            if ($piernaMenor >= $rango->cant_socios_pierna) {
                 $res['id'] = $rango->id;
                 $res['income'] = $rango->ingreso_mensual;
+                break;
             }else{
                 $res['id'] = 0;
             }
@@ -59,7 +69,7 @@ class RangoModel extends Model {
             $res['id'] = 1;
             $res['income'] = 0;
         }
-
+        //echo '<pre>'.var_export($res, true).'</pre>';exit;
         return $res;
     }
 }

@@ -1,0 +1,14 @@
+.link{
+    text-align: center;
+    padding: 20px;
+}
+
+h2, .card-header, .title-center{
+    text-align: center;
+}
+
+#link-miweb{
+    background-color: rgb(253, 253, 200, 0.5);
+    margin: 2% auto;
+    width: 60%;
+}

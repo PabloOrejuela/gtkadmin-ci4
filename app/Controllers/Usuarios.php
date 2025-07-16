@@ -68,7 +68,58 @@ class Usuarios extends BaseController {
      * @throws conditon
      **/
     public function arbolBinario(){
-        echo 'sección en construcción';
+        $data = $this->acl();
+
+        if ($data['logged'] == 1 && $this->session->miembros == 1) {
+
+            $data['session'] = $this->session;
+            $data['sistema'] = $this->sistemaModel->findAll();
+            $data['micodigo'] = $this->socioModel
+                            ->join('usuarios', 'usuarios.id=socios.idusuario')
+                            ->join('rangos', 'rangos.id=socios.idrango')
+                            ->find($this->session->id);
+
+            $arbol = $this->socioModel->select('socios.id as id,codigo_socio,patrocinador,nodopadre,socios.estado as estado,nombre,rango')
+                                ->where('patrocinador', $this->session->id)
+                                ->orWhere('nodopadre', $this->session->id)
+                                ->join('usuarios', 'usuarios.id=socios.idusuario')
+                                ->join('rangos', 'rangos.id=socios.idrango')
+                                ->join('inscripciones', 'inscripciones.idsocio=socios.id', 'left')
+                                ->findAll();//echo $this->db->getLastQuery();
+            
+            //Inyecto los hijos
+            $children = [];
+
+            foreach ($arbol as $socio) {
+                $children[] = [
+                    "name" => $socio->nombre,
+                    "rango" => $socio->rango,
+                    "codigo_socio" => $socio->codigo_socio,
+                    "patrocinador" => $socio->patrocinador,
+                    "nodopadre" => $socio->nodopadre,
+                    "children" => [] // Aquí puedes agregar nietos si los tienes
+                ];
+            }
+            
+            //Inyecto los datos al árbol
+            $data['treeData'] = [
+                "name" => $data['micodigo']->nombre,
+                "rango" => $data['micodigo']->rango,
+                "codigo_socio" => $data['micodigo']->codigo_socio,
+                "patrocinador" => $data['micodigo']->patrocinador,
+                "nodopadre" => $socio->nodopadre,
+                "children" => $children
+            ];
+
+
+            $data['title'] = 'Mi Arbol Binario';
+            $data['subtitle'] = 'Mi árbol binario';
+            $data['main_content'] = 'usuarios/arbol_binario';
+
+            return view('dashboard/index', $data);
+        }else{
+            return redirect()->to('logout');
+        }
     }
 
     /**

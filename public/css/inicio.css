@@ -44,3 +44,8 @@
 #td-bold{
     font-weight: bold;
 }
+
+#td-bold-total{
+    font-weight: bold;
+    background-color: #9df0c7;
+}

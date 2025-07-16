@@ -4,8 +4,8 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class SistemaModel extends Model
-{
+class SistemaModel extends Model {
+    
     protected $table            = 'sistema';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;

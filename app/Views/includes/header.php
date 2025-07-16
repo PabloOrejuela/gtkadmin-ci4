@@ -25,6 +25,7 @@
       integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
       crossorigin="anonymous"
     />
+    
     <!--end::Fonts-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
     <!--begin::Third Party Plugin(OverlayScrollbars)-->
@@ -53,6 +54,9 @@
     <!-- DATATABLES -->
     <link rel="stylesheet" href="<?= site_url(); ?>public/datatables/datatables.min.css" />
     <script language="JavaScript" type="text/javascript" src="<?= site_url();?>public/datatables/datatables.min.js" ></script>
+
+    <!--begin::ICONS-->
+    <script src="https://kit.fontawesome.com/90e597c088.js" crossorigin="anonymous"></script>
 
   </head>
   <!--end::Head-->

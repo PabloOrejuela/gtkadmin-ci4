@@ -39,41 +39,62 @@
                     </div>
                   </div>
                   <!-- /.card-header -->
+                   <?php
+                    
+                    $porcentajeCumplimientoIzq = ($progreso['pierna_izq'])*100/$progreso['rango_siguiente'][0]->cant_socios_pierna;
+                    $porcentajeCumplimientoDer = ($progreso['pierna_der'])*100/$progreso['rango_siguiente'][0]->cant_socios_pierna;;
+
+                    $cantPiernaLarga = $progreso['pierna_der'];
+                    $cantPiernaCorta = $progreso['pierna_izq'];
+                    $porcentPiernaLarga = $porcentajeCumplimientoDer;
+                    $porcentPiernaCorta = $porcentajeCumplimientoIzq;
+
+                    if ($progreso['pierna_izq'] >= $progreso['pierna_der']) {
+                      $cantPiernaLarga = $progreso['pierna_izq'];
+                      $cantPiernaCorta = $progreso['pierna_der'];
+                      $porcentPiernaLarga = $porcentajeCumplimientoIzq;
+                      $porcentPiernaCorta = $porcentajeCumplimientoDer;
+                    }
+
+                    $porcentRangoActual = ($cantPiernaCorta*100)/$progreso['rango_actual'][0]->cant_socios_pierna;
+                    
+
+                  ?>
                   <div class="card-body">
                     <!--begin::Row-->
                     <div class="row">
                       <!-- /.col -->
                       <div class="col-md-12">
-                        <p class="text-center"><strong>Goal Completion</strong></p>
+                        <p class="text-center"><strong>Objetivos conseguidos</strong></p>
                         <div class="progress-group">
                           Cantidad socios pierna mas corta
-                          <span class="float-end"><b>160</b>/200</span>
+                          <span class="float-end"><b><?= $cantPiernaCorta;?></b>/<?= $progreso['rango_siguiente'][0]->cant_socios_pierna; ?></span>
                           <div class="progress progress-sm">
-                            <div class="progress-bar text-bg-primary" style="width: 80%"></div>
+                            <div <?= $porcentPiernaCorta >= 50 ? 'class="progress-bar text-bg-primary"' : 'class="progress-bar text-bg-danger"'; ?> style="width: <?= $porcentPiernaCorta;?>%"></div>
                           </div>
                         </div>
                         <!-- /.progress-group -->
                         <div class="progress-group">
                           Cantidad socios pierna mas larga
-                          <span class="float-end"><b>310</b>/400</span>
+                          <span class="float-end"><b><?= $cantPiernaLarga;?></b>/<?= $progreso['rango_siguiente'][0]->cant_socios_pierna; ?></span>
                           <div class="progress progress-sm">
-                            <div class="progress-bar text-bg-danger" style="width: 75%"></div>
+                            <div <?= $porcentPiernaLarga >= 50 ? 'class="progress-bar text-bg-primary"' : 'class="progress-bar text-bg-danger"'; ?> style="width: <?= $porcentPiernaLarga;?>%"></div>
                           </div>
                         </div>
                         <!-- /.progress-group -->
                         <div class="progress-group">
                             Cantidad socios directos pierna izquierda
-                            <span class="float-end"><b>310</b>/400</span>
+                            <span class="float-end"><b><?= $progreso['pierna_izq'];?></b>/<?= $progreso['rango_siguiente'][0]->cant_socios_pierna; ?></span>
                             <div class="progress progress-sm">
-                                <div class="progress-bar text-bg-danger" style="width: 75%"></div>
+                                <div <?= $porcentajeCumplimientoIzq >= 50 ? 'class="progress-bar text-bg-primary"' : 'class="progress-bar text-bg-danger"'; ?> style="width: <?= $porcentajeCumplimientoIzq;?>%"></div>
                             </div>
                         </div>
                         <!-- /.progress-group -->
                         <div class="progress-group">
                             Cantidad socios directos pierna derecha
-                            <span class="float-end"><b>310</b>/400</span>
+                            <span class="float-end"><b><?= $progreso['pierna_der'];?></b>/<?= $progreso['rango_siguiente'][0]->cant_socios_pierna; ?></span>
                             <div class="progress progress-sm">
-                                <div class="progress-bar text-bg-danger" style="width: 75%"></div>
+                                <div <?= $porcentajeCumplimientoDer >= 50 ? 'class="progress-bar text-bg-primary"' : 'class="progress-bar text-bg-danger"'; ?> style="width: <?= $porcentajeCumplimientoDer;?>%"></div>
                             </div>
                         </div>
                       </div>
@@ -88,40 +109,40 @@
                       <div class="col-md-3 col-6">
                         <div class="text-center border-end">
                           <span class="text-success">
-                            <i class="bi bi-caret-up-fill"></i> 17%
+                            <i class="bi bi-caret-up-fill"></i> <?= $porcentPiernaCorta; ?>%
                           </span>
-                          <h5 class="fw-bold mb-0">1/1</h5>
+                          <h5 class="fw-bold mb-0"><?= $progreso['pierna_izq'].' / '.$progreso['pierna_der']?></h5>
                           <span class="text-uppercase">TOTAL SOCIOS</span>
                         </div>
                       </div>
                       <!-- /.col -->
                       <div class="col-md-3 col-6">
                         <div class="text-center border-end">
-                          <span class="text-info"> <i class="bi bi-caret-left-fill"></i> 0% </span>
-                          <h5 class="fw-bold mb-0">PONER EL RANGO ACTUAL</h5>
+                          <span class="text-info"> <i class="bi bi-caret-left-fill"></i> <?= $porcentRangoActual; ?>% </span>
+                          <h5 class="fw-bold mb-0"><?= $progreso['rango_actual'][0]->rango ?></h5>
                           <span class="text-uppercase">RANGO ACTUAL</span>
                         </div>
                       </div>
                       <!-- /.col -->
                       <div class="col-md-3 col-6">
+                        <div class="text-center">
+                          <span class="text-success">
+                            <i class="bi bi-caret-up-fill"></i> <?= $porcentRangoActual; ?>%
+                          </span>
+                          <h5 class="fw-bold mb-0"><?= $progreso['rango_siguiente'][0]->cant_socios_pierna.' / '.$progreso['rango_siguiente'][0]->cant_socios_pierna; ?></h5>
+                          <span class="text-uppercase">OBJETIVO DEL RANGO ACTUAL</span>
+                        </div>
+                      </div>
+                      <div class="col-md-3 col-6">
                         <div class="text-center border-end">
                           <span class="text-success">
-                            <i class="bi bi-caret-up-fill"></i> 20%
+                            <i class="bi bi-caret-up-fill"></i> <?= 100-$porcentPiernaCorta; ?>%
                           </span>
-                          <h5 class="fw-bold mb-0">PONER EL RANGO SUPERIOR</h5>
+                          <h5 class="fw-bold mb-0"><?= $progreso['rango_siguiente'][0]->rango ?></h5>
                           <span class="text-uppercase">RANGO SIGUIENTE</span>
                         </div>
                       </div>
                       <!-- /.col -->
-                      <div class="col-md-3 col-6">
-                        <div class="text-center">
-                          <span class="text-danger">
-                            <i class="bi bi-caret-down-fill"></i> 18%
-                          </span>
-                          <h5 class="fw-bold mb-0">OBJETIVO PARA ALCANZAR EL SIGUIENTE RANGO</h5>
-                          <span class="text-uppercase">OBJETIVO DEL RANGO ACTUAL</span>
-                        </div>
-                      </div>
                     </div>
                     <!--end::Row-->
                   </div>

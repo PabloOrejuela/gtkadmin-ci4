@@ -12,6 +12,8 @@ $routes->post('validate_login', 'Home::validate_login');
 $routes->get('inicio', 'Home::inicio');
 $routes->get('logout', 'Home::logout');
 $routes->get('select-ciudades', 'Home::selectCiudades');
+$routes->get('mi-web', 'Home::miWeb');
+$routes->get('mi-web/(:num)/(:any)', 'Home::miWeb/$1/$2');
 
 //USUARIOS
 $routes->get('new-member', 'Usuarios::registrarNuevoMiembro');
@@ -46,6 +48,8 @@ $routes->get('progreso-rango', 'Rangos::progresoRangos');
 
 //ADMINISTRACIÓN
 $routes->get('admin-socios-list', 'Administracion::listaMiembros');
+$routes->get('reporte-pagos-socios', 'Administracion::reportePagosSocios');
 
 //SOCIOS
 $routes->get('tablero-lideres', 'Usuarios::tablerolideres');
+

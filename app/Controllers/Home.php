@@ -52,17 +52,26 @@ class Home extends BaseController {
         if ($data['logged'] == 1 ) {
             
             $data['session'] = $this->session;
+            
+            //Obtengo la cantidad de socios patrocinados
+            $patrocinados_izq = $this->socioModel->_getCantSociosActivosPierna(1, $data['id'], 'patrocinador');
+            $patrocinados_der = $this->socioModel->_getCantSociosActivosPierna(2, $data['id'], 'patrocinador');
 
-            $puntos_izq = $this->socioModel->_calculaPuntos(1, $data['id']);
-            $puntos_der = $this->socioModel->_calculaPuntos(2, $data['id']);
-        
+            //Obtengo la cantidad de socios hijos por derrame
+            $hijos_izq = $this->socioModel->_getCantSociosActivosPierna(1, $data['id'], 'nodopadre');
+            $hijos_der = $this->socioModel->_getCantSociosActivosPierna(2, $data['id'], 'nodopadre');
+
+            //Uno los resultados de hijos y patrocinados de cada pierna y para evitar errores de NULL los casteo a "array"
+            $puntos_izq = array_unique(array_merge((array)$patrocinados_izq, (array)$hijos_izq), SORT_REGULAR);
+            $puntos_der = array_unique(array_merge((array)$patrocinados_der, (array)$hijos_der), SORT_REGULAR);
+
             //Contar los puntos de cada pierna
             $socios_izq = $puntos_izq ? count($puntos_izq) : 0;
             $socios_der = $puntos_der ? count($puntos_der) : 0;
             
             //Verfico si tiene un registro de puntos del mes actual
             $puntosRed = $this->puntosRedModel->where('idsocio', $data['id'])->where('mes', date('m'))->where('anio', date('Y'))->first();
-            
+            //echo '<pre>'.var_export($puntosRed, true).'</pre>';exit;
             if ($puntosRed) {
                 //Si existe actualizo los puntos
                 $this->puntosRedModel->update($puntosRed->id, [
@@ -205,6 +214,14 @@ class Home extends BaseController {
             $data['sistema'] = $this->sistemaModel->findAll();
             $data['users'] = $this->usuarioModel->findAll();
 
+            //Actualizo el estado de los patrocinados en cada inicio
+            $patrocinados = $this->socioModel->select('id')->where('patrocinador', $data['id'])->findAll();
+            $this->actualizaEstado($patrocinados);
+
+            //Actualizo el estado de los hijos por derrame en cada inicio
+            $hijos = $this->socioModel->select('id')->where('nodopadre', $data['id'])->findAll();
+            $this->actualizaEstado($hijos);
+
             $this->calculaPuntos();
 
             $data['micodigo'] = $this->socioModel->find($this->session->id);
@@ -232,12 +249,15 @@ class Home extends BaseController {
                 ->where('estado', 0)
                 ->findAll();
 
-            $rangoAccede = $this->rangoModel->_verificaMeta(1, $data['rangos']);
+            $rangoAccede = $this->rangoModel->_verificaMeta($data['pts'], $data['rangos']);
+
             $data['resumen'] = [
                 'mes'=> $this->meses[date('n')],
+                'anio'=> $this->anio,
                 'meta_rango' => $this->rangoModel->where('rango', $this->session->rango)->findAll(),
                 'accede_rango' => $this->rangoModel->select('id,rango')->where('id', $rangoAccede['id'])->findAll(),
                 'income' => $rangoAccede['income'],
+                'cumpleMeta' => 1
             ];
 
             //actualizo el historial de rango en la db
@@ -281,10 +301,38 @@ class Home extends BaseController {
         }
     }
 
+    public function actualizaEstado($arraySocios){
+        $this->socioModel->_actualizaEstado($arraySocios);
+    }
+
     public function selectCiudades(){
         $idprovincia = $this->request->getPostGet('idprovincia');
         $resultado['ciudades'] = $this->ciudadModel->where('idprovincia', $idprovincia)->findAll();
         echo json_encode($resultado);
+    }
+
+    /**
+     * Abre la web personalizada con el form de registro
+     *
+     * @param 
+     * @return void
+     * @throws conditon
+     **/
+    public function miWeb() {
+
+        $data['session'] = $this->session;
+        $data['sistema'] = $this->sistemaModel->findAll();
+
+        $data['provincias'] = $this->provinciaModel->findAll();
+        $data['ciudades'] = $this->ciudadModel->findAll();
+        $data['nombre'] = $this->session->nombre;
+        $data['patrocinador'] = $this->session->id;
+
+        $data['title'] = 'GTK Ecuador';
+        $data['subtitle']='Mi Web';
+        $data['main_content'] = 'mi-web/link-miweb';
+        return view('dashboard/index', $data);
+        
     }
 
     public function logout(){

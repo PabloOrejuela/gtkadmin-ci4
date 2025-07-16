@@ -4,8 +4,8 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class RolModel extends Model
-{
+class RolModel extends Model {
+    
     protected $table            = 'roles';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
