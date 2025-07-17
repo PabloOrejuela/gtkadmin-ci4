@@ -1,3 +1,57 @@
+//"use strict"
+let btnRegistraPagoModal = document.querySelectorAll('[data-bs-target="#registraPagoModal"]');
+
+btnRegistraPagoModal.forEach(btn => {
+    btn.addEventListener('click', function() {
+        
+        let idsocio = this.dataset.idsocio;
+        let fecha = this.dataset.fecha;
+        let total = this.dataset.total;
+        let observacion = this.dataset.observacion;
+        let recompra = this.dataset.recompra;
+
+        document.getElementById('idsocio').value = idsocio;
+        document.getElementById('fecha').value = fecha;
+        document.getElementById('total').value = total;
+        document.getElementById('observacion').value = observacion;
+        document.getElementById('recompra').value = recompra;
+        
+        $('#registraPagoModal').modal();
+    });
+});
+
+
+function registraPago(recompra, fecha, idsocio){
+    alertaMensaje("Registrado "+recompra, 500, "success")
+
+    //Petición AJAX
+    fetch('registrarPagoRecompra?recompra='+recompra+'&fecha='+fecha+'&idsocio='+idsocio, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error en la respuesta del servidor');
+        }
+        return response.json()
+        
+    })
+    .then(data => {
+        //Hago uso de los valores devueltos por la petición
+        alertaMensaje('El pago se ha registrado', 2000, 'success');
+        setTimeout(function(){
+            location.replace('admin-socios-list');
+        }, 3000);
+    })
+    .catch(error => {
+        alertaMensaje('Ha habido un error y no se ha podido registrar', 2000, 'error');
+        console.error(error);
+    });
+}
+
+
 $(document).ready(function () {
     $.fn.DataTable.ext.classes.sFilterInput = "form-control form-control-sm search-input";
     $('#datatablesSimple').DataTable({
@@ -33,3 +87,27 @@ $(document).ready(function () {
                 "<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'p>>"
     });
 });
+
+const alertaMensaje = (msg, time, icon) => {
+    const toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: time,
+        //timerProgressBar: true,
+        //height: '200rem',
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        },
+        customClass: {
+            // container: '...',
+            popup: 'popup-class',
+        }
+    });
+    toast.fire({
+        position: "top-end",
+        icon: icon,
+        title: msg,
+    });
+}

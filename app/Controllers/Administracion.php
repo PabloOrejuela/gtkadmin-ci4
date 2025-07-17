@@ -84,4 +84,32 @@ class Administracion extends BaseController {
             return redirect()->to('logout');
         } 
     }
+
+    public function registrarPagoRecompra(){
+
+        $id = $this->request->getPostGet('recompra');
+        $fecha_compra = $this->request->getPostGet('fecha');
+        
+
+        //Registro el pago de la recompra
+        $data = [
+            'estado' => 1
+        ];
+
+        $registro = $this->pedidoModel->update($id, $data);
+
+        //Actualizo el estado del socio
+        $id = $this->request->getPostGet('idsocio');
+        $data = [
+            'estado' => 1
+        ];
+
+        $this->socioModel->update($id, $data);
+
+        echo json_encode([
+            'success' => true, 
+            'mensaje' => 'Se ha registrado el pago',
+        ]);
+        exit;
+    }
 }

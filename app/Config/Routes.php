@@ -49,6 +49,7 @@ $routes->get('progreso-rango', 'Rangos::progresoRangos');
 //ADMINISTRACIÓN
 $routes->get('admin-socios-list', 'Administracion::listaMiembros');
 $routes->get('reporte-pagos-socios', 'Administracion::reportePagosSocios');
+$routes->get('registrarPagoRecompra', 'Administracion::registrarPagoRecompra');
 
 //SOCIOS
 $routes->get('tablero-lideres', 'Usuarios::tablerolideres');

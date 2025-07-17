@@ -27,11 +27,12 @@ class Rangos extends BaseController {
             $data['sistema'] = $this->sistemaModel->findAll();
 
             $data['historialRangos'] = $this->histRangoModel->select(
-                'year,month,left_leg,right_leg,pts_left,pts_right,income,hist_rangos.idrango as idrango,
+                'year,month,left_leg,right_leg,pts_left,pts_right,income,hist_rangos.idrango as idrango,hist_rangos.id as id,
                 hist_rangos.idsocio as idsocio,hist_rangos.estado as estado,rangos.rango as rango')
                 ->where('idsocio', $this->session->id)
                 ->join('rangos', 'rangos.id=hist_rangos.idrango')
                 ->join('socios', 'socios.id=hist_rangos.idsocio')
+                ->orderBy('id', 'desc')
                 ->findAll();
             
             $data['title'] = 'Historial de Rangos';

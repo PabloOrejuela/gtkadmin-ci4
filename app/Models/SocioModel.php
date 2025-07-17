@@ -97,16 +97,16 @@ class SocioModel extends Model {
         $year = date('Y');
         
         $num_dias = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-
+        
         //Verifica si la variable no es null
         if ($arraySocios) {
             foreach ($arraySocios as $key => $socio) {
-                
+                $estado = 0;
                 //Verifica si tiene pagada la inscripcion
                 if ($socio->id) {
                     $inscripcion = $this->inscripcionModel->select('estado')->where('idsocio', $socio->id)->first();
                 }
-
+                
                 //Verifica si tiene pagada la inscripcion
                 if ($socio->id) {
                     $recompra = $this->pedidoModel->select('estado')
@@ -114,17 +114,19 @@ class SocioModel extends Model {
                             ->where('fecha_compra BETWEEN "'. date('Y-m-d', strtotime($fechaCadena.'-01')). '" and "'. date('Y-m-d', strtotime($fechaCadena.'-'.$num_dias)).'"')
                             ->first();
                 }
+                
                 //Actualiza el estado
                 $builder = $this->db->table('socios');
                 $builder->where('id', $socio->id);
 
                 if (isset($inscripcion) && isset($recompra)) {
                     if ($inscripcion->estado == 1 && $recompra->estado == 1) {
-                        $builder->set('estado', 1);
+                        $estado = 1;
                     }
                 }else{
-                    $builder->set('estado', 0);
+                    $$estado = 0;
                 }
+                $builder->set('estado', $estado);
                 $builder->update();
                 
             }
