@@ -14,7 +14,7 @@ class PedidoModel extends Model {
     protected $protectFields    = true;
     protected $allowedFields    = [
         'fecha_compra','cantidad','total','observacion_pedido','idsocio',
-        'idpaquete','estado'
+        'idpaquete','estado','descripcion'
     ];
 
     protected bool $allowEmptyInserts = false;

@@ -13,6 +13,7 @@
                 <tr>
                     <th style="width: 10px">No.</th>
                     <th>Fecha de compra</th>
+                    <th>Descripción</th>
                     <th>Paquete</th>
                     <th>Cantidad</th>
                     <th>Total</th>
@@ -28,6 +29,7 @@
                     echo '<tr class="align-middle">
                         <td>'.$num.'</td>
                         <td>'.$pedido->fecha_compra.'</td>
+                        <td>'.$pedido->descripcion.'</td>
                         <td>'.$pedido->paquete.' | '.$pedido->litros.' litros - $'.$pedido->pvp.'</td>
                         <td>'.$pedido->cantidad.'</td>
                         <td>'.$pedido->total.'</td>';

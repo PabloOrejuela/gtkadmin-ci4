@@ -16,7 +16,6 @@ class Administracion extends BaseController {
         return $data;
     }
 
-
     /**
      * Grid de miembros registrados para administrarlos
      *

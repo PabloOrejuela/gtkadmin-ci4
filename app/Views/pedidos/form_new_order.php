@@ -95,6 +95,22 @@
                 <!--end::Col-->
                 <!--begin::Col-->
                 <div class="col-md-6">
+                <label for="total" class="form-label">Descripción:</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="descripcion"
+                        name="descripcion"
+                        value="<?= $tiene_recompra == null ? 'RECOMPRA DEL MES DE '.strtoupper($mes_actual) : 'COMPRA DE PRODUCTO' ?>"
+                        readonly
+                        required
+                    />
+                    <div class="valid-feedback">Correcto!</div>
+                    <div class="invalid-feedback">Por favor debe ingresar su nombre .</div>
+                </div>
+                <!--end::Col-->
+                <!--begin::Col-->
+                <div class="col-md-6">
                     <label for="observacion_pedido" class="form-label">Observaciones</label>
                     <textarea 
                         class="form-control"

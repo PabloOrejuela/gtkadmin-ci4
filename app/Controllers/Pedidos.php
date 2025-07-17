@@ -7,6 +7,15 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class Pedidos extends BaseController {
 
+    private $meses = [
+        1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril',
+        5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto',
+        9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre'
+    ];
+
+    private $mes;
+    private $anio;
+
     public function acl() {
         $data['idrol'] = $this->session->idrol;
         $data['id'] = $this->session->id;
@@ -27,13 +36,18 @@ class Pedidos extends BaseController {
         
         $data['session'] = $this->session;
         $data['sistema'] = $this->sistemaModel->findAll();
+
         $data['provincias'] = $this->provinciaModel->findAll();
         $data['ciudades'] = $this->ciudadModel->findAll();
         $data['paquetes'] = $this->paqueteModel->findAll();
-        $data['datosSocio'] = $this->socioModel->where('idusuario', $this->session->id)
-                            ->join('usuarios', 'usuarios.id=socios.idusuario')
-                            ->join('rangos', 'rangos.id=socios.idrango')
-                            ->findAll();
+        $data['datosSocio'] = $this->socioModel
+            ->select('nombre,codigo_socio,patrocinador,nodopadre,idusuario,idrango,socios.id as idsocio')
+            ->where('idusuario', $this->session->id)->join('usuarios', 'usuarios.id=socios.idusuario')
+            ->join('rangos', 'rangos.id=socios.idrango')->findAll();
+        
+        $data['tiene_recompra'] = $this->pedidoModel->_verificaRecompra($data['datosSocio'][0]->idsocio);
+
+        $data['mes_actual'] = $this->meses[date('n')];
 
         $data['title'] = 'Pedidos';
         $data['subtitle']='Hacer un pedido de producto';
@@ -61,6 +75,7 @@ class Pedidos extends BaseController {
                 'cantidad' => strtoupper($this->request->getPostGet('cantidad')),
                 'total' => strtoupper($this->request->getPostGet('total')),
                 'idpaquete' => strtoupper($this->request->getPostGet('idpaquete')),
+                'descripcion' => strtoupper($this->request->getPostGet('descripcion')),
                 'idsocio' => $this->session->id,
                 'observacion_pedido' => strtoupper($this->request->getPostGet('observacion_pedido')),
                 'fecha_compra' => date('Y-m-d h:m:s'),
