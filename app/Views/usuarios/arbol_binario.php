@@ -5,6 +5,15 @@
     <svg></svg>
 
     <script>
+
+        function ordenarHijosPorPosicion(node) {
+            if (node.children && node.children.length > 0) {
+                // Ordena: los que tengan posicion=1 a la izquierda, posicion=2 a la derecha
+                node.children.sort((a, b) => (a.posicion || 1) - (b.posicion || 1));
+                node.children.forEach(ordenarHijosPorPosicion);
+            }
+        }
+
         // Inyectamos los datos desde PHP como JSON
         const data = <?php echo json_encode($treeData, JSON_UNESCAPED_UNICODE); ?>;
 
@@ -23,7 +32,9 @@
 
         svg.call(zoom);
 
+        ordenarHijosPorPosicion(data);
         const root = d3.hierarchy(data);
+
         const hijos = root.children ? root.children.length : 1;
 
         // Define un ancho mínimo y un factor de expansión por hijo
@@ -70,10 +81,10 @@
             });
 
         node.append("rect")
-            .attr("x", -75)
+            .attr("x", -50)
             .attr("y", 0)
-            .attr("width", 150)
-            .attr("height", 200)
+            .attr("width", 100)
+            .attr("height", 130)
             .attr("rx", 4) // opcional: esquinas redondeadas, quítalo si quieres esquinas rectas
             .attr("fill", "#e6e9d0")
             .attr("stroke", "#2E7D32")
@@ -81,64 +92,79 @@
         
         //Nombre
         node.append("text")
-            .attr("x", -25)
-            .attr("dy", 55) // Centrado verticalmente dentro del rectángulo (10 + 80/2)
+            .attr("x", 0) // centro del rectángulo
+            .attr("y", 30) // posición vertical inicial dentro del rectángulo
             .attr("text-anchor", "middle")
             .attr("dominant-baseline", "middle")
-            .attr("fill", "#fff") // Opcional: texto blanco para mejor contraste
+            .attr("fill", "#2E7D32")
             .style("font-family", "Arial, sans-serif")
-            .style("font-weight", "Bold")  // Cambia el tipo de fuente
-            .style("font-size", "11px")   
-            .style("text-align", "center")  
-            .text(d => d.data.name).attr("x", 0);
+            .style("font-weight", "Bold")
+            .style("font-size", "9px")
+            .each(function(d) {
+                // Limita el texto a 18 caracteres por línea
+                const maxChars = 18;
+                let name = d.data.name || "";
+                let lines = [];
+                while (name.length > 0) {
+                    lines.push(name.substring(0, maxChars));
+                    name = name.substring(maxChars);
+                }
+                lines.forEach((line, i) => {
+                    d3.select(this)
+                        .append("tspan")
+                        .attr("x", 0)
+                        .attr("dy", i === 0 ? 0 : 12) // separación entre líneas
+                        .text(line);
+                });
+            });
 
         //Rango
         node.append("text")
             .attr("x", -25)
-            .attr("dy", 75) // Centrado verticalmente dentro del rectángulo (10 + 80/2)
+            .attr("dy", 60) // Centrado verticalmente dentro del rectángulo (10 + 80/2)
             .attr("text-anchor", "middle")
             .attr("dominant-baseline", "middle")
             .attr("fill", "#fff") // Opcional: texto blanco para mejor contraste
             .style("font-family", "Arial, sans-serif")
-            .style("font-size", "10px")   
+            .style("font-size", "8px")   
             .style("text-align", "center")  
             .text(d => "Rango: "+d.data.rango).attr("x", 0);
         
         //Código
         node.append("text")
             .attr("x", -25)
-            .attr("dy", 95) // Centrado verticalmente dentro del rectángulo (10 + 80/2)
+            .attr("dy", 80)
             .attr("text-anchor", "middle")
             .attr("dominant-baseline", "middle")
             .attr("fill", "#fff") // Opcional: texto blanco para mejor contraste
             .style("font-family", "Arial, sans-serif")
-            .style("font-size", "10px")   
+            .style("font-size", "8px")   
             .style("text-align", "center")  
             .text(d => "COD: "+d.data.codigo_socio).attr("x", 0);
         
         //Patrocinador
-        node.append("text")
-            .attr("x", -25)
-            .attr("dy", 115) // Centrado verticalmente dentro del rectángulo (10 + 80/2)
-            .attr("text-anchor", "middle")
-            .attr("dominant-baseline", "middle")
-            .attr("fill", "#fff") // Opcional: texto blanco para mejor contraste
-            .style("font-family", "Arial, sans-serif")
-            .style("font-size", "10px")   
-            .style("text-align", "center")  
-            .text(d => "Patrocinador: "+d.data.patrocinador).attr("x", 0);
+        // node.append("text")
+        //     .attr("x", -25)
+        //     .attr("dy", 115) // Centrado verticalmente dentro del rectángulo (10 + 80/2)
+        //     .attr("text-anchor", "middle")
+        //     .attr("dominant-baseline", "middle")
+        //     .attr("fill", "#fff") // Opcional: texto blanco para mejor contraste
+        //     .style("font-family", "Arial, sans-serif")
+        //     .style("font-size", "10px")   
+        //     .style("text-align", "center")  
+        //     .text(d => "Patrocinador: "+d.data.patrocinador).attr("x", 0);
         
         //Nodo padre
-        node.append("text")
-            .attr("x", -25)
-            .attr("dy", 135) // Centrado verticalmente dentro del rectángulo (10 + 80/2)
-            .attr("text-anchor", "middle")
-            .attr("dominant-baseline", "middle")
-            .attr("fill", "#fff") // Opcional: texto blanco para mejor contraste
-            .style("font-family", "Arial, sans-serif")
-            .style("font-size", "10px")   
-            .style("text-align", "center")  
-            .text(d => "Padre: "+d.data.patrocinador).attr("x", 0);
+        // node.append("text")
+        //     .attr("x", -25)
+        //     .attr("dy", 135) // Centrado verticalmente dentro del rectángulo (10 + 80/2)
+        //     .attr("text-anchor", "middle")
+        //     .attr("dominant-baseline", "middle")
+        //     .attr("fill", "#fff") // Opcional: texto blanco para mejor contraste
+        //     .style("font-family", "Arial, sans-serif")
+        //     .style("font-size", "10px")   
+        //     .style("text-align", "center")  
+        //     .text(d => "Padre: "+d.data.patrocinador).attr("x", 0);
 
         const alertaMensaje = (msg, time, icon) => {
         const toast = Swal.mixin({

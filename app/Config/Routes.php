@@ -12,7 +12,7 @@ $routes->post('validate_login', 'Home::validate_login');
 $routes->get('inicio', 'Home::inicio');
 $routes->get('logout', 'Home::logout');
 $routes->get('select-ciudades', 'Home::selectCiudades');
-$routes->get('mi-web', 'Home::miWeb');
+$routes->get('mi-web', 'Home::linkMiWeb');
 $routes->get('mi-web/(:num)/(:any)', 'Home::miWeb/$1/$2');
 
 //USUARIOS
@@ -20,6 +20,8 @@ $routes->get('new-member', 'Usuarios::registrarNuevoMiembro');
 $routes->post('new-member-insert', 'Usuarios::insertNuevoMiembro');
 $routes->get('perfil/(:num)', 'Usuarios::perfil/$1');
 $routes->post('edit-profile', 'Usuarios::editProfile');
+$routes->get('exito-inscripcion', 'Usuarios::exitoInscripcion');
+$routes->get('error-inscripcion', 'Usuarios::errorInscripcion');
 
 //Pedidos
 $routes->get('new-order', 'Pedidos::registraNuevoPedido');

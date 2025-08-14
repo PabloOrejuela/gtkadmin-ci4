@@ -79,27 +79,6 @@ class Usuarios extends BaseController {
                             ->join('rangos', 'rangos.id=socios.idrango')
                             ->find($this->session->id);
 
-            $arbol = $this->socioModel->select('socios.id as id,codigo_socio,patrocinador,nodopadre,socios.estado as estado,nombre,rango')
-                                ->where('patrocinador', $this->session->id)
-                                ->orWhere('nodopadre', $this->session->id)
-                                ->join('usuarios', 'usuarios.id=socios.idusuario')
-                                ->join('rangos', 'rangos.id=socios.idrango')
-                                ->join('inscripciones', 'inscripciones.idsocio=socios.id', 'left')
-                                ->findAll();//echo $this->db->getLastQuery();
-            
-            //Inyecto los hijos
-            $children = [];
-
-            foreach ($arbol as $socio) {
-                $children[] = [
-                    "name" => $socio->nombre,
-                    "rango" => $socio->rango,
-                    "codigo_socio" => $socio->codigo_socio,
-                    "patrocinador" => $socio->patrocinador,
-                    "nodopadre" => $socio->nodopadre,
-                    "children" => [] // Aquí puedes agregar nietos si los tienes
-                ];
-            }
             
             //Inyecto los datos al árbol
             $data['treeData'] = [
@@ -107,8 +86,8 @@ class Usuarios extends BaseController {
                 "rango" => $data['micodigo']->rango,
                 "codigo_socio" => $data['micodigo']->codigo_socio,
                 "patrocinador" => $data['micodigo']->patrocinador,
-                "nodopadre" => $socio->nodopadre,
-                "children" => $children
+                "nodopadre" => $data['micodigo']->nodopadre,
+                "children" => $this->obtenerHijos($data['micodigo']->id)
             ];
 
 
@@ -120,6 +99,29 @@ class Usuarios extends BaseController {
         }else{
             return redirect()->to('logout');
         }
+    }
+
+    private function obtenerHijos($idPadre) {
+        $hijos = $this->socioModel
+            ->select('socios.id as id,codigo_socio,patrocinador,nodopadre,socios.estado as estado,nombre,rango,posicion')
+            ->where('nodopadre', $idPadre)
+            ->join('usuarios', 'usuarios.id=socios.idusuario')
+            ->join('rangos', 'rangos.id=socios.idrango')
+            ->findAll();
+
+        $resultado = [];
+        
+        foreach ($hijos as $hijo) {
+            $resultado[] = [
+                "name" => $hijo->nombre,
+                "rango" => $hijo->rango,
+                "codigo_socio" => $hijo->codigo_socio,
+                "patrocinador" => $hijo->patrocinador,
+                "nodopadre" => $hijo->nodopadre,
+                "children" => $this->obtenerHijos($hijo->id) // recursividad
+            ];
+        }
+        return $resultado;
     }
 
     /**
@@ -149,6 +151,8 @@ class Usuarios extends BaseController {
         $data = $this->acl();
 
         if ($data['logged'] == 1) {
+
+            $origen = $this->request->getPostGet('origen');
 
             // recogemos datos enviados desde el formulario de registro
             $user = filter_var(strtoupper($this->request->getPostGet('user')), FILTER_SANITIZE_STRING);
@@ -182,85 +186,75 @@ class Usuarios extends BaseController {
                 return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
             }else{ 
                 
-                //Inserto el nuevo usuario
-                $user = $this->usuarioModel->insert($usuario);
+                //verifico si no existe el usuario
+                $userExist = $this->usuarioModel->select('cedula')->where('cedula', $usuario['cedula'])->findAll();
 
-                if ($user) {
-                    //Género un codigo de socio
-                    $lastId = $this->socioModel->orderBy('id',"desc")->limit(1)->findAll();
+                if (!$userExist) {
+                    //Inserto el nuevo usuario
+                    $user = $this->usuarioModel->insert($usuario);
 
-                    $socio = [
-                        'codigo_socio' => 'GTK-170000'.(int)($lastId[0]->id + 1),
-                        'patrocinador' => $this->session->id,
-                        'fecha_inscripcion' => date('Y-m-d h:m:s'),
-                        'idusuario' => $user,
-                        'idrango' => 1,
-                        'estado' => 0
-                    ];
-                    
-                    $socio =$this->socioModel->insert($socio);
+                    if ($user) {
+                        //Género un codigo de socio
+                        $lastId = $this->socioModel->orderBy('id',"desc")->limit(1)->findAll();
 
-                } else {
-                    //Salgo del sistema
-                }
-                
-                if ($socio) {
-                    //Se genera un BIR
-                     $bir = [
-                        'idsocio' => $this->session->id,
-                        'socio_nuevo' => $socio,
-                        'cantidad' => 50,
-                        'concepto' => "BIR POR INSCRIPCION DE NUEVO SOCIO",
-                        'fecha' => date('Y-m-d h:m:s'),
-                        'estado' => 0,
-                    ];
-                    $idbir = $this->birModel->insert($bir);
+                        $socio = [
+                            'codigo_socio' => 'GTK-170000'.(int)($lastId[0]->id + 1),
+                            'patrocinador' => $this->session->id,
+                            'fecha_inscripcion' => date('Y-m-d h:m:s'),
+                            'idusuario' => $user,
+                            'idrango' => 1,
+                            'estado' => 0
+                        ];
+                        
+                        $socio =$this->socioModel->insert($socio);
 
-                    //Se carga ese BIR por cobrar a la billetera digital
-                    // if ($idbir) {
-                    //     //Si se insertó el BIR cargo el bono en la billetera
-                    //     $bono = [
-                    //         'idsocio' => $this->session->id,
-                    //         'fecha' => date('Y-m-d'),
-                    //         'tipo_mov' => 3, //INGRESO POR BIR ACREDITADO
-                    //         'cantidad' => 50,
-                    //         'origen' => 0,
-                    //         'concepto' => "INGRESO POR BIR ACREDITADO",
-                    //         'idbir' => $idbir
-                    //     ];
+                    }
 
-                    //     $res = $this->billeteraDigitalModel->insert($bono);
-                    // }
+                    if ($socio) {
+                        //Se genera un BIR
+                        $bir = [
+                            'idsocio' => $this->session->id,
+                            'socio_nuevo' => $socio,
+                            'cantidad' => 50,
+                            'concepto' => "BIR POR INSCRIPCION DE NUEVO SOCIO",
+                            'fecha' => date('Y-m-d h:m:s'),
+                            'estado' => 0,
+                        ];
+                        $idbir = $this->birModel->insert($bir);
 
-                    //Se registra el pedido inicial con la inscripcion
-                    $pedido_inicial = [
-                            
-                        'fecha_compra' => date('Y-m-d'),
-                        'cantidad' => 1,
-                        'total' => 135,
-                        'observacion_pedido' => "COMPRA INICIAL POR INSCRIPCION",
-                        'idsocio' => $socio,
-                        'idpaquete' => 1,
-                        'estado' => 0,
-                    ];
+                        //Se registra el pedido inicial con la inscripcion
+                        $pedido_inicial = [
+                                
+                            'fecha_compra' => date('Y-m-d'),
+                            'cantidad' => 1,
+                            'total' => 135,
+                            'observacion_pedido' => "COMPRA INICIAL POR INSCRIPCION",
+                            'idsocio' => $socio,
+                            'idpaquete' => 1,
+                            'estado' => 0,
+                        ];
 
-                    $res = $this->pedidoModel->insert($pedido_inicial);
+                        $res = $this->pedidoModel->insert($pedido_inicial);
 
-                    //Se registra el costo de $50 de la inscripción
-                    $pago_inscripcion = [
-                        'pago' => 50,
-                        'idsocio' => $socio,
-                        'estado' => 0,
-                    ];
+                        //Se registra el costo de $50 de la inscripción
+                        $pago_inscripcion = [
+                            'pago' => 50,
+                            'idsocio' => $socio,
+                            'estado' => 0,
+                        ];
 
-                    $res = $this->inscripcionModel->insert($pago_inscripcion);
-                    
-                }else{
-
-                }
+                        $res = $this->inscripcionModel->insert($pago_inscripcion);
+                    }
                
-                //echo $this->db->getLastQuery();
-                return redirect()->to('lista-miembros');
+                    //Si viene desde la web 
+                    if ($origen == 'web') {
+                        return redirect()->to('exito-inscripcion');
+                    }else if($origen == 'form_interno'){
+                        return redirect()->to('lista-miembros');
+                    }
+                }else{
+                    return redirect()->to('error-inscripcion');
+                }
             }
         }else{
 
@@ -308,6 +302,16 @@ class Usuarios extends BaseController {
             return redirect()->to('logout');
         }
         
+    }
+
+    function exitoInscripcion(){
+        $data[] = null;
+        return view('usuarios/exito_inscripcion', $data);
+    }
+
+    function errorInscripcion(){
+        $data[] = null;
+        return view('usuarios/error_inscripcion', $data);
     }
 
     /**
@@ -411,6 +415,9 @@ class Usuarios extends BaseController {
             $data['sistema'] = $this->sistemaModel->findAll();
 
             $data['miEquipo'] = $this->socioModel->where('patrocinador', $this->session->id)->findAll();
+
+            $data['idpatrocinador'] = $this->session->id;
+            $data['patrocinador'] = $this->session->nombre;
 
             //Traigo a los socios debajo del patrocinador que no tienen posición
             $data['sociosReserva'] = $this->socioModel->select('socios.id as id,codigo_socio,patrocinador,idusuario,nombre,cedula,email,fecha_inscripcion,socios.estado as estado')

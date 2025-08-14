@@ -76,6 +76,7 @@
                     <h5 class="modal-title" id="staticBackdropLabel">Mi equipo</h5>
                     <input class="form-control" type="hidden" name="id" id="id">
                     <input class="form-control" type="hidden" name="patrocinador" id="patrocinador">
+                    <input class="form-control" type="hidden" name="nombrepatrocinador" id="nombrepatrocinador" value="<?= $patrocinador ?>">
                     <select 
                         class="form-select" 
                         id="select-piernas" 

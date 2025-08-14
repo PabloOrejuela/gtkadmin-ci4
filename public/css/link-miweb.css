@@ -12,3 +12,32 @@ h2, .card-header, .title-center{
     margin: 2% auto;
     width: 60%;
 }
+
+#text-header{
+    /* color: black !important; */
+    text-shadow: 2px 2px 6px #aaa;
+}
+
+#logo-ruso{
+    width: 250px;
+}
+
+.img-size-100{
+    width: 250px !important;
+}
+
+.img-size-64{
+    width: 64px !important;
+}
+
+#h2-text-left{
+    text-align: left;
+}
+
+#div-provincia-otro-pais, #div-ciudad-otro-pais{
+    display: none;
+}
+
+#video-plan{
+    text-align: center;
+}

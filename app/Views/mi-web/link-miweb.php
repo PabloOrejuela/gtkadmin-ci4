@@ -17,7 +17,7 @@
                         type="text"
                         class="form-control"
                         id="link-miweb"
-                        value="<?= site_url()?>public/mi-web/index.php?patrocinador=<?= $patrocinador;?>&nombre=<?= $nombre;?>"
+                        value="<?= site_url().'mi-web/'.$patrocinador.'/'.$nombre;?>"
                         readonly
                     />
                     

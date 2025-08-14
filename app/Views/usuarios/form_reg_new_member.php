@@ -139,7 +139,13 @@
                 <!--begin::Col-->
                 <div class="col-md-6">
                     <label for="validationCustom05" class="form-label">Ciudad</label>
-                    <select class="form-select" id="validationCustomCiudades" name="idciudad" required disabled></select>
+                    <select 
+                        class="form-select" 
+                        id="validationCustomCiudades" 
+                        name="idciudad" 
+                        required 
+                        disabled>
+                    </select>
                 </div>
                 <!--end::Col-->
                 <!--begin::Col-->
@@ -166,7 +172,7 @@
                         value="185.00"
                         readonly
                     />
-                    <div class="invalid-feedback">Por favor debe ingresar un número de documento.</div>
+                    <div class="invalid-feedback"></div>
                 </div>
                 <!--end::Col-->
                 <!--begin::Col-->

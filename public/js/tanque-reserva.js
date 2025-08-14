@@ -32,6 +32,7 @@ botonesPosicion.forEach(btn => {
         e.stopPropagation()
         let id = this.dataset.id;
         let patrocinador = this.dataset.patrocinador
+        let nombrepatrocinador = document.getElementById('nombrepatrocinador').value
         
         selectPiernasModal.addEventListener('change', function(e){
 
@@ -56,7 +57,7 @@ botonesPosicion.forEach(btn => {
                     inputPatrocinador.value = patrocinador
                     
                     if (datos.length > 0) {
-                        selectPosicionModal.innerHTML += `<option value="0" selected>-- Seleccionar Posición --</option>`
+                        selectPosicionModal.innerHTML += `<option value="${inputId.value}" selected>-- ${nombrepatrocinador} --</option>`
 
                         for (const dato of datos) {
                             selectPosicionModal.innerHTML += `<option value="${dato.id}">${dato.nombre}</option>`

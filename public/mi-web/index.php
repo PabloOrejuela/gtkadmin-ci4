@@ -154,21 +154,33 @@
 						</header>
 						<div class="row">
 							<section class="col-6 col-12-narrower">
-								<form method="post" action="#">
+								<form  class="needs-validation" method="post" action="../new-member-insert">
 									<div class="row gtr-50">
 										<div class="col-6 col-12-mobile">
-											<input name="name" placeholder="Name" type="text" />
+											<input name="nombre" class="form-control" placeholder="Nombre" type="text" id="validationCustomNombre" required/>
 										</div>
 										<div class="col-6 col-12-mobile">
-											<input name="email" placeholder="Email" type="text" />
+											<input name="user" class="form-control" placeholder="Usuario" type="text" id="validationCustomUsername" required/>
+										</div>
+										<div class="col-6 col-12-mobile">
+											<input name="password" class="form-control" placeholder="Password" type="password" id="validationCustomPassword" required/>
+										</div>
+										<div class="col-6 col-12-mobile">
+											<input name="telefono" class="form-control" placeholder="Teléfono" type="text" id="telefono" required/>
+										</div>
+										<div class="col-6 col-12-mobile">
+											<input name="telefono_2" class="form-control" placeholder="Teléfono 2" type="text" id="telefono_2"/>
+										</div>
+										<div class="col-6 col-12-mobile">
+											<input name="email" class="form-control" placeholder="Email" type="email" id="validationCustomEmail" />
 										</div>
 										<div class="col-12">
 											<textarea name="message" placeholder="Message"></textarea>
 										</div>
 										<div class="col-12">
 											<ul class="actions">
-												<li><input type="submit" value="Send Message" /></li>
-												<li><input type="reset" value="Clear form" /></li>
+												<li><input type="submit" value="Registrar" /></li>
+												<li><input type="reset" value="Limpiar formulario" /></li>
 											</ul>
 										</div>
 									</div>
@@ -209,3 +221,28 @@
 
 	</body>
 </html>
+<script>
+	// Example starter JavaScript for disabling form submissions if there are invalid fields
+	(() => {
+		'use strict';
+
+		// Fetch all the forms we want to apply custom Bootstrap validation styles to
+		const forms = document.querySelectorAll('.needs-validation');
+
+		// Loop over them and prevent submission
+		Array.from(forms).forEach((form) => {
+		form.addEventListener(
+			'submit',
+			(event) => {
+			if (!form.checkValidity()) {
+				event.preventDefault();
+				event.stopPropagation();
+			}
+
+			form.classList.add('was-validated');
+			},
+			false,
+		);
+		});
+	})();
+</script>

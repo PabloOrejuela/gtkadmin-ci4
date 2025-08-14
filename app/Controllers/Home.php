@@ -100,7 +100,6 @@ class Home extends BaseController {
     }
 
 
-
     public function validate_login(){
         $data = [
             'user' => $this->request->getPostGet('user'),
@@ -308,17 +307,18 @@ class Home extends BaseController {
     public function selectCiudades(){
         $idprovincia = $this->request->getPostGet('idprovincia');
         $resultado['ciudades'] = $this->ciudadModel->where('idprovincia', $idprovincia)->findAll();
+        
         echo json_encode($resultado);
     }
 
     /**
-     * Abre la web personalizada con el form de registro
+     * form para copiar y emviar el link al form de registro
      *
      * @param 
      * @return void
      * @throws conditon
      **/
-    public function miWeb() {
+    public function linkMiWeb() {
 
         $data['session'] = $this->session;
         $data['sistema'] = $this->sistemaModel->findAll();
@@ -332,6 +332,27 @@ class Home extends BaseController {
         $data['subtitle']='Mi Web';
         $data['main_content'] = 'mi-web/link-miweb';
         return view('dashboard/index', $data);
+        
+    }
+
+    /**
+     * Abre la web personalizada con el form de registro
+     *
+     * @param 
+     * @return void
+     * @throws conditon
+     **/
+    public function miWeb($idpatrocinador, $patrocinador) {
+
+        $data['provincias'] = $this->provinciaModel->findAll();
+        $data['ciudades'] = $this->ciudadModel->findAll();
+        $data['nombre'] = $patrocinador;
+        $data['idpatrocinador'] = $idpatrocinador;
+
+        $data['title'] = 'GTK Ecuador';
+        $data['subtitle']='Mi Web';
+        //$data['main_content'] = 'mi-web/mi-web';
+        return view('mi-web/mi-web', $data);
         
     }
 
