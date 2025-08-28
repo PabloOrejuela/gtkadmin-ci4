@@ -39,13 +39,12 @@ class Usuarios extends BaseController {
             $data['session'] = $this->session;
             $data['sistema'] = $this->sistemaModel->findAll();
             $data['micodigo'] = $this->socioModel->find($this->session->id);
-            $data['mi_equipo'] = $this->socioModel->select('socios.id as id,codigo_socio,patrocinador,fecha_inscripcion,idusuario,
+            $data['mi_equipo'] = $this->socioModel->select('codigo_socio,patrocinador,fecha_inscripcion,idusuario,
                                 idrango,socios.estado as estado_socio,nombre,user,usuarios.cedula as cedula,posicion,
-                                telefono,email,idrol,rango,inscripciones.estado as estado_inscripcion,nodopadre,idsocio')
+                                telefono,email,idrol,rango,nodopadre,socios.id as id')
                                 ->where('patrocinador', $data['micodigo']->id)
                                 ->join('usuarios', 'usuarios.id=socios.idusuario')
                                 ->join('rangos', 'rangos.id=socios.idrango')
-                                ->join('inscripciones', 'inscripciones.idsocio=socios.id', 'left')
                                 ->findAll();//echo $this->db->getLastQuery();
 
             $data['title'] = 'Lista Binaria ACTUALMENTE EN PROCESO DE DESARROLLO';
@@ -75,21 +74,29 @@ class Usuarios extends BaseController {
             $data['session'] = $this->session;
             $data['sistema'] = $this->sistemaModel->findAll();
             $data['micodigo'] = $this->socioModel
-                            ->join('usuarios', 'usuarios.id=socios.idusuario')
-                            ->join('rangos', 'rangos.id=socios.idrango')
+                            ->select('nombre,rango,codigo_socio,patrocinador,nodopadre,posicion,socios.id as id')
+                            ->join('usuarios', 'usuarios.id=socios.idusuario','left')
+                            ->join('rangos', 'rangos.id=socios.idrango','left')
                             ->find($this->session->id);
 
-            
-            //Inyecto los datos al árbol
+            // Todos los socios
+            $data['todosLosSocios'] = $this->socioModel
+                ->select('nombre,rango,codigo_socio,patrocinador,nodopadre,posicion,socios.id as id')
+                ->join('usuarios', 'usuarios.id=socios.idusuario','left')
+                ->join('rangos', 'rangos.id=socios.idrango','left')
+                ->findAll();
+
+            // Nodo raíz del árbol
             $data['treeData'] = [
+                "id" => $data['micodigo']->id,
                 "name" => $data['micodigo']->nombre,
                 "rango" => $data['micodigo']->rango,
                 "codigo_socio" => $data['micodigo']->codigo_socio,
                 "patrocinador" => $data['micodigo']->patrocinador,
-                "nodopadre" => $data['micodigo']->nodopadre,
-                "children" => $this->obtenerHijos($data['micodigo']->id)
+                "nodopadre" => $data['micodigo']->nodopadre
             ];
 
+            //echo '<pre>'.var_export($data['todosLosSocios'], true).'</pre>';exit;
 
             $data['title'] = 'Mi Arbol Binario';
             $data['subtitle'] = 'Mi árbol binario';
@@ -105,12 +112,11 @@ class Usuarios extends BaseController {
         $hijos = $this->socioModel
             ->select('socios.id as id,codigo_socio,patrocinador,nodopadre,socios.estado as estado,nombre,rango,posicion')
             ->where('nodopadre', $idPadre)
-            ->join('usuarios', 'usuarios.id=socios.idusuario')
-            ->join('rangos', 'rangos.id=socios.idrango')
+            ->join('usuarios', 'usuarios.id=socios.idusuario','left')
+            ->join('rangos', 'rangos.id=socios.idrango', 'left')
             ->findAll();
 
         $resultado = [];
-        
         foreach ($hijos as $hijo) {
             $resultado[] = [
                 "name" => $hijo->nombre,
@@ -227,8 +233,8 @@ class Usuarios extends BaseController {
                                 
                             'fecha_compra' => date('Y-m-d'),
                             'cantidad' => 1,
-                            'total' => 135,
-                            'observacion_pedido' => "COMPRA INICIAL POR INSCRIPCION",
+                            'total' => 185,
+                            'observacion_pedido' => "COMPRA INICIAL MAS INSCRIPCION",
                             'idsocio' => $socio,
                             'idpaquete' => 1,
                             'estado' => 0,
@@ -236,14 +242,6 @@ class Usuarios extends BaseController {
 
                         $res = $this->pedidoModel->insert($pedido_inicial);
 
-                        //Se registra el costo de $50 de la inscripción
-                        $pago_inscripcion = [
-                            'pago' => 50,
-                            'idsocio' => $socio,
-                            'estado' => 0,
-                        ];
-
-                        $res = $this->inscripcionModel->insert($pago_inscripcion);
                     }
                
                     //Si viene desde la web 
@@ -305,13 +303,21 @@ class Usuarios extends BaseController {
     }
 
     function exitoInscripcion(){
-        $data[] = null;
-        return view('usuarios/exito_inscripcion', $data);
+        $data['session'] = $this->session;
+        $data['sistema'] = $this->sistemaModel->findAll();
+        $data['title'] = 'Administración';
+        $data['subtitle'] = 'Registro de nuevo socio';
+        $data['main_content'] = 'usuarios/exito_inscripcion';
+        return view('dashboard/index', $data);
     }
 
     function errorInscripcion(){
-        $data[] = null;
-        return view('usuarios/error_inscripcion', $data);
+        $data['session'] = $this->session;
+        $data['sistema'] = $this->sistemaModel->findAll();
+        $data['title'] = 'Administración';
+        $data['subtitle'] = 'Registro de nuevo socio';
+        $data['main_content'] = 'usuarios/error_inscripcion';
+        return view('dashboard/dash_externo', $data);
     }
 
     /**
@@ -383,11 +389,10 @@ class Usuarios extends BaseController {
             $data['micodigo'] = $this->socioModel->find($this->session->id);
 
             $data['mi_equipo'] = $this->socioModel->select('socios.id as id,codigo_socio,patrocinador,fecha_inscripcion,idusuario,idrango,socios.estado as estado_socio,
-                                nombre, usuarios.cedula as cedula,telefono,email,idrol,rango,inscripciones.estado as estado_inscripcion,idsocio')
+                                nombre, usuarios.cedula as cedula,telefono,email,idrol,rango,idsocio')
                                 ->where('patrocinador', $data['micodigo']->id)
                                 ->join('usuarios', 'usuarios.id=socios.idusuario')
                                 ->join('rangos', 'rangos.id=socios.idrango')
-                                ->join('inscripciones', 'inscripciones.idsocio=socios.id', 'left')
                                 ->findAll();//echo $this->db->getLastQuery();
 
             $data['title'] = 'Mi Equipo';

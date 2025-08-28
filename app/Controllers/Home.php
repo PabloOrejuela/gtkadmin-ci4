@@ -115,8 +115,6 @@ class Home extends BaseController {
             return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
         }else{ 
 
-            //$usuario = $this->usuarioModel->_getUsuario($data);
-
             // recuperamos el hash del usuario almacenado en base de datos
             $usuario = $this->usuarioModel->select('usuarios.id as id,rango,acuerdo_terminos,nombre,user,telefono,email,password,imagen,cedula,idrol,logged,rol,
             administracion,reportes,codigo_socio,miembros,usuarios.estado as estado,usuarios.created_at as miembro_desde')
@@ -148,15 +146,14 @@ class Home extends BaseController {
                         $this->usuarioModel->update($usuario[0]->id, $user);
                     }
 
-                    $estadoInscripcion = $this->inscripcionModel->select('estado')->where('idsocio', $usuario[0]->id)->findAll();
                     $estadoRecompra = $this->pedidoModel->_verificaRecompra($usuario[0]->id);
 
-                    if (isset($estadoInscripcion) && isset($estadoRecompra) && $estadoInscripcion != 0 && $estadoRecompra->estado != 0) {
+                    if (isset($estadoRecompra) && $estadoRecompra->estado != 0) {
                         $suscripcion = "ACTIVO";
                     }else{
                         $suscripcion = "INACTIVO";
                     }
-
+                    //echo '<pre>'.var_export($estadoRecompra, true).'</pre>';exit;
                     $sessiondata = [
                         
                         'id' => $usuario[0]->id,
@@ -226,14 +223,14 @@ class Home extends BaseController {
             $data['micodigo'] = $this->socioModel->find($this->session->id);
             $data['rangos'] = $this->rangoModel->findAll();
             
-            $data['mi_equipo'] = $this->socioModel->select('socios.id as id,codigo_socio,patrocinador,fecha_inscripcion,idusuario,idrango,socios.estado as estado_socio,
-                                nombre,cedula,telefono,email,idrol,rango,inscripciones.estado as estado_inscripcion,idsocio')
-                                ->where('patrocinador', $data['micodigo']->id)
-                                ->join('usuarios', 'usuarios.id=socios.idusuario')
-                                ->join('rangos', 'rangos.id=socios.idrango')
-                                ->join('inscripciones', 'inscripciones.idsocio=socios.id', 'left')
-                                ->findAll();
+            $data['mi_equipo'] = $this->socioModel->select('socios.id as id,codigo_socio,patrocinador,fecha_inscripcion,idusuario,idrango,
+                        socios.estado as estado_socio,nombre,cedula,telefono,email,idrol,rango,socios.id as idsocio')
+                        ->where('patrocinador', $data['micodigo']->id)
+                        ->join('usuarios', 'usuarios.id=socios.idusuario')
+                        ->join('rangos', 'rangos.id=socios.idrango')
+                        ->findAll();
 
+            //echo '<pre>'.var_export($data['mi_equipo'], true).'</pre>';exit;
 
             $data['pedidos'] = $this->pedidoModel->where('idsocio', $this->session->id)
                                                     ->join('paquetes', 'paquetes.id=pedidos.idpaquete')
@@ -243,10 +240,14 @@ class Home extends BaseController {
                                                     ->where('anio', date('Y'))
                                                     ->first();
 
+            //echo '<pre>'.var_export($data['pts'], true).'</pre>';exit;
+
             $data['bir_pendientes'] = $this->birModel->selectSum('cantidad', 'totalBir')
                 ->where('idsocio', $this->session->id)
                 ->where('estado', 0)
                 ->findAll();
+            
+            //echo '<pre>'.var_export($data['bir_pendientes'], true).'</pre>';exit;
 
             $rangoAccede = $this->rangoModel->_verificaMeta($data['pts'], $data['rangos']);
 

@@ -1,4 +1,3 @@
-
 body {
     margin: 0;
     overflow: hidden;
@@ -17,14 +16,15 @@ svg {
 }
 
 .node rect {
-    fill: #f3f3da;
+    /* fill: #f3f3da;*/
+    color: #000;
     stroke: #113013;
     stroke-width: 1px;
 }
 
 .node text {
     font: 14px sans-serif;
-    fill: #333;
+    /* fill: #333; */
 }
 
 .link {

@@ -41,7 +41,7 @@
                                 $patrocinador = $this->socioModel->where('socios.id', $socio->patrocinador)
                                                 ->join('usuarios', 'usuarios.id = socios.idusuario')->first();
                                                 //echo $this->db->getLastQuery();exit;
-                                $nodopadre = $this->socioModel->where('socios.id', $socio->nodopadre)
+                                $nodopadre = $this->socioModel->select('nombre')->where('socios.id', $socio->nodopadre)
                                                 ->join('usuarios', 'usuarios.id = socios.idusuario')->first();
 
                                 echo '<tr>';
@@ -51,7 +51,13 @@
                                 echo '<td>'.$socio->cedula.'</td>';
                                 echo '<td>'.$socio->rango.'</td>';
                                 echo '<td>'.$patrocinador->nombre.'</td>';
-                                echo '<td>'.$nodopadre->nombre.'</td>';
+                                
+                                if ($nodopadre) {
+                                    echo '<td>'.$patrocinador->nombre.'</td>';
+                                } else {
+                                    echo '<td>SIN UBICACION</td>';
+                                }
+                            
 
                                 //verifica cual pierna es mayor
                                 if (count($puntos_izquierda) > count($puntos_derecha)) {

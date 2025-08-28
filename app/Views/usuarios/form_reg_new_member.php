@@ -199,6 +199,7 @@
         <!--end::Body-->
         <!--begin::Footer-->
         <div class="card-footer">
+            <?= form_hidden('origen', 'web'); ?> 
             <button class="btn btn-info" type="submit">Enviar</button>
         </div>
         <!--end::Footer-->

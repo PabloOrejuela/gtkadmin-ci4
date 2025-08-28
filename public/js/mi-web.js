@@ -50,7 +50,7 @@ function autollenarFormulario() {
     setValue('telefono_2', Math.floor(1700000000 + Math.random() * 9000000000).toString());
     setValue('email', userRandom()+'@correo.com');
     setValue('direccion', 'Av. Principal 123');
-    setValue('inscripcion', '150.00');
+    setValue('inscripcion', '185.00');
 
     const check = document.getElementById('invalidCheck');
     if (check) check.checked = true;
@@ -72,21 +72,21 @@ function autollenarFormulario() {
 }
 
 function nombreRandom() {
-    const nombres = ["Juan", "Ana", "Luis", "María", "Pedro", "Sofía", "Carlos", "Lucía"];
-    const apellidos = ["Pérez", "Gómez", "Rodríguez", "López", "Martínez", "Fernández", "Torres", "Ramírez"];
+    const nombres = ["Juan", "Ana", "Luis", "María", "Pedro", "Sofía", "Carlos", "Lucía", "Pablo","Ivan","Marco"];
+    const apellidos = ["Pérez", "Gómez", "Rodríguez", "López", "Martínez", "Fernández", "Torres", "Ramírez","Mendez","Mendoza","Gordillo"];
     const nombre = nombres[Math.floor(Math.random() * nombres.length)];
     const apellido = apellidos[Math.floor(Math.random() * apellidos.length)];
     return nombre + " " + apellido;
 }
 
 function userRandom() {
-    const nombres = ["gato", "perro", "perico", "rata"];
+    const nombres = ["gato", "perro", "perico", "rata","ave","bobo","cookie","cool","aid"];
     const nombre = nombres[Math.floor(Math.random() * nombres.length)];
     return nombre;
 }
 
 function passRandom() {
-    const pass = ["123", "456", "789", "147", "258"]
+    const pass = ["123", "456", "789", "147", "258","159","753","785"]
     const password = pass[Math.floor(Math.random() * pass.length)]
     return password
 }

@@ -144,6 +144,7 @@
                     <th style="width: 10px">No.</th>
                     <th>Fecha de compra</th>
                     <th>Paquete</th>
+                    <th>Descripción</th>
                     <th>Cantidad</th>
                     <th>Total</th>
                     <th>Estado</th>
@@ -159,6 +160,7 @@
                             <td>'.$num.'</td>
                             <td>'.$pedido->fecha_compra.'</td>
                             <td>'.$pedido->paquete.' | '.$pedido->litros.' litros - $'.$pedido->pvp.'</td>
+                            <td>'.$pedido->observacion_pedido.'</td>
                             <td>'.$pedido->cantidad.'</td>
                             <td>'.$pedido->total.'</td>';
                             if ($pedido->estado == 1) {
@@ -224,7 +226,7 @@
                             <td>'.$socio->rango.'</td>';
 
                           //verifica el estado de un socio
-                          if ($socio->estado_socio == 1 && $socio->estado_inscripcion == 1) {
+                          if ($socio->estado_socio == 1) {
                             echo '<td>ACTIVO</td>';
                           } else {
                             echo '<td>INACTIVO</td>';

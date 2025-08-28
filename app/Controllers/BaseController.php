@@ -13,7 +13,6 @@ use App\Models\BilleteraDigitalModel;
 use App\Models\BirModel;
 use App\Models\CiudadModel;
 use App\Models\HistRangoModel;
-use App\Models\InscripcionModel;
 use App\Models\LiderModel;
 use App\Models\PaqueteModel;
 use App\Models\PedidoModel;
@@ -71,9 +70,8 @@ abstract class BaseController extends Controller
         $this->db = \Config\Database::connect();
         $this->billeteraDigitalModel = new BilleteraDigitalModel($this->db);
         $this->birModel = new BirModel($this->db);
-        $this->histRangoModel = new HistRangoModel($this->db);
         $this->ciudadModel = new CiudadModel($this->db);
-        $this->inscripcionModel = new InscripcionModel($this->db);
+        $this->histRangoModel = new HistRangoModel($this->db);
         $this->liderModel = new LiderModel($this->db);
         $this->paqueteModel = new PaqueteModel($this->db);
         $this->pedidoModel = new PedidoModel($this->db);

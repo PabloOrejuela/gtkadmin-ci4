@@ -34,11 +34,10 @@ class Administracion extends BaseController {
             $data['micodigo'] = $this->socioModel->find($this->session->id);
 
             $data['mi_equipo'] = $this->socioModel->select('socios.id as id,codigo_socio,patrocinador,fecha_inscripcion,idusuario,idrango,socios.estado as estado_socio,
-                                nombre, usuarios.cedula as cedula,telefono,email,idrol,rango,inscripciones.estado as estado_inscripcion,idsocio')
+                                nombre, usuarios.cedula as cedula,telefono,email,idrol,rango,socios.id as idsocio')
                                 ->where('patrocinador', $data['micodigo']->id)
                                 ->join('usuarios', 'usuarios.id=socios.idusuario')
                                 ->join('rangos', 'rangos.id=socios.idrango')
-                                ->join('inscripciones', 'inscripciones.idsocio=socios.id', 'left')
                                 ->findAll();//echo $this->db->getLastQuery();
 
             $data['title'] = 'Administración';

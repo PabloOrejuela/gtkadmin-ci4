@@ -89,7 +89,6 @@ class SocioModel extends Model {
      * @throws conditon
      **/
     public function _actualizaEstado($arraySocios){
-        $this->inscripcionModel = new InscripcionModel();
         $this->pedidoModel = new PedidoModel();
 
         $fechaCadena = date('Y-m');
@@ -102,12 +101,8 @@ class SocioModel extends Model {
         if ($arraySocios) {
             foreach ($arraySocios as $key => $socio) {
                 $estado = 0;
-                //Verifica si tiene pagada la inscripcion
-                if ($socio->id) {
-                    $inscripcion = $this->inscripcionModel->select('estado')->where('idsocio', $socio->id)->first();
-                }
                 
-                //Verifica si tiene pagada la inscripcion
+                //Verifica si tiene recompra
                 if ($socio->id) {
                     $recompra = $this->pedidoModel->select('estado')
                             ->where('idsocio', $socio->id)
@@ -119,8 +114,8 @@ class SocioModel extends Model {
                 $builder = $this->db->table('socios');
                 $builder->where('id', $socio->id);
 
-                if (isset($inscripcion) && isset($recompra)) {
-                    if ($inscripcion->estado == 1 && $recompra->estado == 1) {
+                if (isset($recompra)) {
+                    if ($recompra->estado == 1) {
                         $estado = 1;
                     }
                 }else{
