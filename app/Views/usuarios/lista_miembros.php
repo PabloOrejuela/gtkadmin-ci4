@@ -4,8 +4,6 @@
     <!--begin::Header-->
     <div class="card-header"><div class="card-title"><?= $title; ?></div></div>
     <!--end::Header-->
-    <!--begin::Form-->
-    <form class="needs-validation" action="<?= site_url().'new-member-insert';?>" method="post" novalidate>
     <!--begin::Body-->
     <div class="card-body">
         <!--begin::Row-->
@@ -83,13 +81,6 @@
         <!--end::Row-->
     </div>
     <!--end::Body-->
-    <!--begin::Footer-->
-    <div class="card-footer">
-        <button class="btn btn-info" type="submit">Enviar</button>
-    </div>
-    <!--end::Footer-->
-    </form>
-    <!--end::Form-->
     <!--begin::JavaScript-->
     <script>
     // Example starter JavaScript for disabling form submissions if there are invalid fields
