@@ -334,7 +334,7 @@ class Usuarios extends BaseController {
             $usuario = [
                 'nombre' => strtoupper($this->request->getPostGet('nombre')),
                 'user' => strtoupper($this->request->getPostGet('user')),
-                'password' => strtoupper($this->request->getPostGet('password')),
+                //'password' => strtoupper($this->request->getPostGet('password')),
                 'telefono' => strtoupper($this->request->getPostGet('telefono')),
                 'telefono_2' => strtoupper($this->request->getPostGet('telefono_2')),
                 'cedula' => strtoupper($this->request->getPostGet('cedula')),

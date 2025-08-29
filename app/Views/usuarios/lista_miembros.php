@@ -13,7 +13,6 @@
                     <th class="col-md-1" id="td-left">Id</th>
                     <th class="col-md-3">Nombre</th>
                     <th class="col-md-1">Documento</th>
-                    <th class="col-md-1">Inscripción</th>
                     <th class="col-md-1">Recompra</th>
                     <th class="col-md-1">Estado</th>
                 </thead>
@@ -41,13 +40,6 @@
                                 echo '<td id="td-left">'.$socio->id.'</td>';
                                 echo '<td>'.$socio->nombre.'</td>';
                                 echo '<td>'.$socio->cedula.'</td>';
-
-                                //verifica el pago de la inscripción
-                                if ($socio->estado_inscripcion == 1) {
-                                    echo '<td>PAGADO</td>';
-                                } else {
-                                    echo '<td>PAGO PENDIENTE</td>';
-                                }
                                 
                                 //verifica si el socio tiene recompra activa
                                 if ($recompra) {
@@ -62,7 +54,7 @@
                                 
 
                                 //verifica el estado de un socio
-                                if ($socio->estado_socio == 1 && $socio->estado_inscripcion == 1) {
+                                if ($socio->estado_socio == 1) {
                                     echo '<td>ACTIVO</td>';
                                 } else {
                                     echo '<td>INACTIVO</td>';

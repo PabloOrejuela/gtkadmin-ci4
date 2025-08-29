@@ -1,6 +1,8 @@
 <h3>Cambios</h3>
 <h5>Desarrollo</h5>
 <ul>
+    <li>Se deshabilitó el campo de passwoprd en la edición del perfil</li>
+    <li>Coregida la vista de Mi Equipo</li>
     <li>Corregido el reporte de resultados de los socios en administración</li>
     <li>Corregida la administración de socios</li>
     <li>Corregida la vista de exito inscripción</li>

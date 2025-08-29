@@ -55,7 +55,7 @@
                         name="password"
                         value="<?= $perfil->password; ?>"
                         placeholder="password"
-                        required
+                        readonly
                     />
                     <div class="valid-feedback">Correcto!</div>
                     <div class="invalid-feedback">Por favor debe elegir un nombre de usuario.</div>
