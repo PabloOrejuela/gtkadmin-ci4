@@ -357,11 +357,6 @@
             <!-- /.card-header -->
             <div class="card-body">
               <div class="loren">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vitae posuere lorem, sit amet egestas quam. Quisque eleifend eleifend nibh quis tempus. Nullam id eros ut augue auctor sollicitudin. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vivamus eu massa felis. Nullam eget vulputate justo. Nullam vitae laoreet sapien. Quisque dapibus eget dolor ut molestie. Phasellus tempor turpis a neque facilisis porta. Nam scelerisque tellus odio, a ultrices lacus sollicitudin in.
-
-Donec dui ante, iaculis nec elementum a, efficitur sed turpis. Pellentesque sed quam id lacus aliquet mattis. 
-Mauris eu imperdiet urna, vitae pulvinar mauris. Maecenas lectus sem, aliquet non sem non, posuere ullamcorper libero. Ut congue justo vel lectus vehicula aliquet. Etiam ullamcorper augue tellus, a sollicitudin sapien pulvinar eu. 
-Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
 
 <p>GTK Ecuador cree en el avance de la tecnología y de los sistemas de mercadeo en red como uno de los métodos de mayor beneficio para todas las personas.
 

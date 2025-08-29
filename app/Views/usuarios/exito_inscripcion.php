@@ -26,7 +26,7 @@
 							href="<?= site_url(); ?>" 
 							target="_blank"
 							style="padding:15px;"
-							class="btn btn-outline-secondary">Ingrese al Backoffice de Ganadores One Million
+							class="btn btn-outline-secondary">Ingrese al Backoffice de GTK Ecuador
 						</a>
                     </section>
                 </div>
