@@ -97,7 +97,7 @@
                                 echo '<td>'.($sueldoRango->ingreso_mensual+$birPendientes[0]->birPendientes).'</td>';
                                 
                                 //verifica el estado de un socio
-                                if ($res->estado_socio == 1 && $res->estado_inscripcion == 1) {
+                                if ($res->estado_socio == 1) {
                                     echo '<td>ACTIVO</td>';
                                 } else {
                                     echo '<td>INACTIVO</td>';

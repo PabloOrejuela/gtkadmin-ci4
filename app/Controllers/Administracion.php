@@ -66,11 +66,10 @@ class Administracion extends BaseController {
             $data['sistema'] = $this->sistemaModel->findAll();
             $data['micodigo'] = $this->socioModel->find($this->session->id);
 
-            $data['resultados'] = $this->socioModel->select('socios.id as id,codigo_socio,patrocinador,fecha_inscripcion,idusuario,idrango,socios.estado as estado_socio,
-                                nombre, usuarios.cedula as cedula,telefono,email,idrol,rango,inscripciones.estado as estado_inscripcion,idsocio')
+            $data['resultados'] = $this->socioModel->select('socios.id as id,codigo_socio,patrocinador,idusuario,idrango,socios.estado as estado_socio,
+                                nombre, usuarios.cedula as cedula,telefono,email,idrol,rango,socios.id as idsocio')
                                 ->join('usuarios', 'usuarios.id=socios.idusuario')
                                 ->join('rangos', 'rangos.id=socios.idrango')
-                                ->join('inscripciones', 'inscripciones.idsocio=socios.id', 'left')
                                 ->findAll();
 
 
@@ -87,26 +86,66 @@ class Administracion extends BaseController {
 
         $id = $this->request->getPostGet('recompra');
         $fecha_compra = $this->request->getPostGet('fecha');
+        $abono = $this->request->getPostGet('total');
+        $observacion = $this->request->getPostGet('observacion');
+        $idsocio = $this->request->getPostGet('idsocio');
         
+        $total = 0;
+        $estado = 0;
+        $saldo = 0;
+        $abonos = 0;
+        $total = $this->pedidoModel->select('total')->where('id', $id)->first();
 
         //Registro el pago de la recompra
-        $data = [
-            'estado' => 1
+        $pago = [
+            'abono' => $abono,
+            'observacion' => $observacion,
+            'fecha' => date('Y-m-d H:i:s'),
+            'idpedido' => $id
         ];
+        // echo '<pre>'.var_export($abono, true).'</pre>';exit;
+        try {
+            $idpago = $this->pagoModel->insert($pago);
 
-        $registro = $this->pedidoModel->update($id, $data);
+            //Traigo la suma de los abonos de ese pedido
+            $abonos = $this->pagoModel->selectSum('abono', 'abonos')->where('idpedido', $id)->first();
+            $saldo = $total->total - $abonos->abonos;
 
-        //Actualizo el estado del socio
-        $id = $this->request->getPostGet('idsocio');
-        $data = [
-            'estado' => 1
-        ];
+            if ($saldo <= 0) {
+                $estado = 1; // pagado
+            } else {
+                $estado = 0; // pendiente
+            }
 
-        $this->socioModel->update($id, $data);
+            $pedido = [
+                'abono' => $abonos->abonos,
+                'saldo' => $saldo,
+                'estado' => $estado
+            ];
+
+            $registro = $this->pedidoModel->update($id, $pedido);
+
+            //Actualizo el estado del socio
+            $idsocio = $this->request->getPostGet('idsocio');
+
+            $socio = [
+                'estado' => $estado
+            ];
+
+            $this->socioModel->update($idsocio, $socio);
+
+            $res = true;
+            $mensaje = 'Se ha registrado el pago';
+
+        }catch(Exception $e) {
+            
+            $res = false;
+            $mensaje = $e->getMessage();
+        }
 
         echo json_encode([
-            'success' => true, 
-            'mensaje' => 'Se ha registrado el pago',
+            'success' => $res, 
+            'mensaje' => $mensaje,
         ]);
         exit;
     }

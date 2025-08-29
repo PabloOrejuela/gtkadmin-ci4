@@ -1,18 +1,21 @@
 //"use strict"
 let btnRegistraPagoModal = document.querySelectorAll('[data-bs-target="#registraPagoModal"]');
+let txtAbono = document.getElementById('total') 
+
+var dato = 0
 
 btnRegistraPagoModal.forEach(btn => {
     btn.addEventListener('click', function() {
         
         let idsocio = this.dataset.idsocio;
         let fecha = this.dataset.fecha;
-        let total = this.dataset.total;
+        var saldo = this.dataset.saldo;
         let observacion = this.dataset.observacion;
         let recompra = this.dataset.recompra;
 
         document.getElementById('idsocio').value = idsocio;
         document.getElementById('fecha').value = fecha;
-        document.getElementById('total').value = total;
+        document.getElementById('total').value = saldo;
         document.getElementById('observacion').value = observacion;
         document.getElementById('recompra').value = recompra;
         
@@ -20,12 +23,22 @@ btnRegistraPagoModal.forEach(btn => {
     });
 });
 
+txtAbono.addEventListener('change', function(){
+            
+    let abono = parseFloat(txtAbono.value) || 0;  // convierte a número
+    let saldo = parseFloat(dato) || 0;            // asegúrate que dato también sea número
 
-function registraPago(recompra, fecha, idsocio){
-    alertaMensaje("Registrado "+recompra, 500, "success")
+    if (abono > saldo) {
+        txtAbono.value = saldo;
+    } else {
+        txtAbono.value = abono;
+    }
+})
+
+function registraPago(recompra, fecha, idsocio, observacion, total){
 
     //Petición AJAX
-    fetch('registrarPagoRecompra?recompra='+recompra+'&fecha='+fecha+'&idsocio='+idsocio, {
+    fetch('registrarPagoRecompra?recompra='+recompra+'&fecha='+fecha+'&idsocio='+idsocio+'&observacion='+observacion+'&total='+total, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

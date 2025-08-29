@@ -4,8 +4,6 @@
     <!--begin::Header-->
     <div class="card-header"><div class="card-title"><?= $title; ?></div></div>
     <!--end::Header-->
-    <!--begin::Form-->
-    <form class="needs-validation" action="<?= site_url().'new-member-insert';?>" method="post" novalidate>
     <!--begin::Body-->
     <div class="card-body">
         <!--begin::Row-->
@@ -16,6 +14,7 @@
                     <th>Nombre</th>
                     <th>Documento</th>
                     <th>Recompra</th>
+                    <th>Saldo a pagar</th>
                     <th>Estado</th>
                     <th>ACCIONES</th>
 
@@ -23,7 +22,9 @@
                 <tbody>
                     <?php
                         use App\Models\PedidoModel;
+                        use App\Models\PagoModel;
                         $this->pedidoModel = new PedidoModel();
+                        $this->pagoModel = new PagoModel();
 
                         if ($mi_equipo) {
                             foreach ($mi_equipo as $socio) {
@@ -31,24 +32,38 @@
                                 $fechaCadena = date('Y-m');
                                 $month = date('m');
                                 $year = date('Y');
+                                $abonos = 0;
+                                $saldo = 0;
                                 
                                 $num_dias = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
-                                $recompra = $this->pedidoModel->where('fecha_compra BETWEEN "'. date('Y-m-d', strtotime($fechaCadena.'-01')). '" and "'. date('Y-m-d', strtotime($fechaCadena.'-'.$num_dias)).'"')
+                                $recompra = $this->pedidoModel->select('pedidos.id as id,fecha_compra,total,descripcion,estado,observacion_pedido')
+                                            ->where('fecha_compra BETWEEN "'. date('Y-m-d', strtotime($fechaCadena.'-01')). '" and "'. date('Y-m-d', strtotime($fechaCadena.'-'.$num_dias)).'"')
                                             ->where('idsocio', $socio->id)
-                                            ->findall();
+                                            ->first();
                                 
-                                
+                                if ($recompra) {
+                                    $saldo = $recompra->total;
+                                    $sumaAbonos = $this->pagoModel->selectSum('abono','abonos')->where('idpedido', $recompra->id)->findAll();
+
+                                    if ($sumaAbonos) {
+                                        $abonos = $sumaAbonos[0]->abonos;
+                                        $saldo = $recompra->total - $abonos;
+                                    }
+                                }
+
                                 echo '<tr>';
                                 echo '<td id="td-left">'.$socio->id.'</td>';
                                 echo '<td>'.$socio->nombre.'</td>';
                                 echo '<td>'.$socio->cedula.'</td>';
                                 
                                 //verifica si el socio tiene recompra activa
-                                if (isset($recompra) && count($recompra) > 0 && $recompra[0]->estado == 1) {
-                                    echo '<td>PAGADO</td>';
+                                if (isset($recompra)) {
+                                    echo '<td>HA REALIZADO UNA RECOMPRA</td>';
+                                    echo '<td>'.$saldo.'</td>';
                                 } else {
                                     echo '<td>NO REGISTRA RECOMPRA</td>';
+                                    echo '<td>0.00</td>';
                                 }
 
                                 //verifica el estado de un socio
@@ -58,22 +73,23 @@
                                     echo '<td>INACTIVO</td>';
                                 }
 
-                                if (isset($recompra) && count($recompra) > 0 && $recompra[0]->estado == 0) {
+                                if (isset($recompra) && $recompra->estado == 0) {
                                     echo '<td id="td-ventas">
                                         <a
                                             id="btn-register_'.$socio->id.'"
                                             data-idsocio="'.$socio->id.'"
-                                            data-recompra="'.$recompra[0]->id.'"
-                                            data-fecha="'.$recompra[0]->fecha_compra.'"
-                                            data-total="'.$recompra[0]->total.'"
-                                            data-observacion="'.$recompra[0]->observacion_pedido.'"
+                                            data-recompra="'.$recompra->id.'"
+                                            data-saldo="'.$saldo.'"
+                                            data-fecha="'.$recompra->fecha_compra.'"
+                                            data-total="'.$recompra->total.'"
+                                            data-observacion="'.$recompra->observacion_pedido.'"
                                             data-bs-toggle="modal"
                                             data-bs-target="#registraPagoModal"
                                             href="#" 
                                             class="edit"
                                         >Registrar pago</a>
                                     </td>';
-                                }else if(isset($recompra) && count($recompra) > 0 && $recompra[0]->estado == 1){
+                                }else if(isset($recompra) && $recompra->estado == 1){
                                     echo '<td id="td-ventas">
                                         NO TIENE PAGOS PENDIENTES
                                     </td>';
@@ -96,13 +112,6 @@
         <!--end::Row-->
     </div>
     <!--end::Body-->
-    <!--begin::Footer-->
-    <div class="card-footer">
-        <button class="btn btn-info" type="submit">Enviar</button>
-    </div>
-    <!--end::Footer-->
-    </form>
-    <!--end::Form-->
 
     <!-- Registra pago Modal-->
     <div class="modal fade" id="registraPagoModal" tabindex="-1" aria-labelledby="registraPagoModal" aria-hidden="true">
@@ -119,8 +128,8 @@
                     <label for="fecha" class="label mt-2">Fecha</label>
                     <input class="form-control" type="text" name="fecha" id="fecha" value="">
 
-                    <label for="fecha" class="label mt-2">Total</label>
-                    <input class="form-control" type="text" name="total" id="total" value="">
+                    <label for="fecha" class="label mt-2">Abono:</label>
+                    <input class="form-control" type="text" name="total" id="total" value="<?= $recompra ? $saldo : '0.00' ?>">
 
                     <label for="fecha" class="label mt-2">Observación</label>
                     <input class="form-control" type="text" name="observacion" id="observacion" value="">
@@ -132,7 +141,7 @@
                         type="button" 
                         class="btn btn-secondary" 
                         data-bs-dismiss="modal" 
-                        onClick="registraPago(document.getElementById('recompra').value, document.getElementById('fecha').value, document.getElementById('idsocio').value) "
+                        onClick="registraPago(document.getElementById('recompra').value,document.getElementById('fecha').value,document.getElementById('idsocio').value,document.getElementById('observacion').value,document.getElementById('total').value)"
                     >Registrar pago</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>

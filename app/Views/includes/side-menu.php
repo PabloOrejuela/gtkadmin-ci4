@@ -85,12 +85,12 @@
                   <p>Historial del pedidos</p>
                 </a>
               </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a href="historial-pedidos" class="nav-link">
                   <i class="nav-icon bi bi-circle"></i>
                   <p>Lista de pedidos mensual</p>
                 </a>
-              </li>
+              </li> -->
             </ul>
           </li>
           <li class="nav-item">
